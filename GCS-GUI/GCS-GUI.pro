@@ -26,13 +26,25 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    battlemenu.cpp \
+    playercreationmenu.cpp \
+    battlesizemenu.cpp \
+    choosefightermenu.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    battlemenu.h \
+    playercreationmenu.h \
+    battlesizemenu.h \
+    choosefightermenu.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    battlemenu.ui \
+    playercreationmenu.ui \
+    battlesizemenu.ui \
+    choosefightermenu.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
