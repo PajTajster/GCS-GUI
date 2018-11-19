@@ -30,14 +30,17 @@ SOURCES += \
     battlemenu.cpp \
     playercreationmenu.cpp \
     battlesizemenu.cpp \
-    choosefightermenu.cpp
+    choosefightermenu.cpp \
+    simlogic.cpp
 
 HEADERS += \
         mainwindow.h \
     battlemenu.h \
     playercreationmenu.h \
     battlesizemenu.h \
-    choosefightermenu.h
+    choosefightermenu.h \
+    simlogic.h \
+    json.hpp
 
 FORMS += \
         mainwindow.ui \
