@@ -1,0 +1,54 @@
+{
+  "characters": [
+    {
+      "name":  "Bandit",
+      "strength": 9,
+      "dexterity": 6,
+      "health": 12,
+      "veterancy": 2,
+      "weapon": "Broadsword",
+      "armour": "Leather Jacket",
+      "shield": "None"
+    },
+    {
+      "name": "Brigand",
+      "strength": 12,
+      "dexterity": 8,
+      "health": 16,
+      "veterancy": 4,
+      "weapon": "Axe",
+      "armour": "Scale Armour",
+      "shield": "Buckler"
+    },
+    {
+      "name": "Musketeer",
+      "strength": 11,
+      "dexterity": 13,
+      "health": 18,
+      "veterancy": 3,
+      "weapon": "Musket",
+      "armour": "Leather Jacket",
+      "shield": "None"
+    },
+    {
+      "name": "Archer",
+      "strength": 16,
+      "dexterity": 12,
+      "health": 15,
+      "veterancy": 2,
+      "weapon": "Short Bow",
+      "armour": "Leather Jacket",
+      "shield": "None"
+    },
+    {
+      "name": "Crossbowman",
+      "strength": 17,
+      "dexterity": 12,
+      "health": 16,
+      "veterancy": 3,
+      "weapon": "Heavy Crossbow",
+      "armour": "Half Plate",
+      "shield": "None"
+    }
+  ]
+}
