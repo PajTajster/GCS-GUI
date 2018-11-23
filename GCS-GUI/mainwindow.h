@@ -20,6 +20,10 @@ public:
 private slots:
     void exitApp();
 
+    void on_prepareCharacterButton_clicked();
+
+    void on_pCCancelButton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

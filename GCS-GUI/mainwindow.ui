@@ -30,7 +30,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>4</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="mainMenu">
      <widget class="QPushButton" name="prepareCharacterButton">
@@ -147,7 +147,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QPushButton" name="characterDoneButton">
+     <widget class="QPushButton" name="pCCharacterDoneButton">
       <property name="geometry">
        <rect>
         <x>410</x>
@@ -252,7 +252,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QPushButton" name="cancelButton">
+     <widget class="QPushButton" name="pCCancelButton">
       <property name="geometry">
        <rect>
         <x>510</x>
@@ -281,7 +281,7 @@
        <set>Qt::AlignCenter</set>
       </property>
      </widget>
-     <widget class="QLabel" name="characterPointsLabel">
+     <widget class="QLabel" name="pCCharacterPointsLabel">
       <property name="geometry">
        <rect>
         <x>60</x>
@@ -296,7 +296,7 @@
      </widget>
     </widget>
     <widget class="QWidget" name="battleSizeMenu">
-     <widget class="QPushButton" name="teamButton_2">
+     <widget class="QPushButton" name="bSteamButton_2">
       <property name="geometry">
        <rect>
         <x>50</x>
@@ -309,7 +309,7 @@
        <string>1 vs 1</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="goBackButton">
+     <widget class="QPushButton" name="bSgoBackButton">
       <property name="geometry">
        <rect>
         <x>510</x>
@@ -322,7 +322,7 @@
        <string>Go back</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="teamButton">
+     <widget class="QPushButton" name="bSteamButton">
       <property name="geometry">
        <rect>
         <x>50</x>
@@ -335,7 +335,7 @@
        <string>2 vs 2</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="doneButton">
+     <widget class="QPushButton" name="bSDoneButton">
       <property name="geometry">
        <rect>
         <x>404</x>
