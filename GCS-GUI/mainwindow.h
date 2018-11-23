@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "simlogic.h"
 #include "playercreationmenu.h"
 
 namespace Ui {
@@ -14,6 +15,8 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
+    GameMaster* gamemaster;
+
     ~MainWindow();
 
 private slots:
