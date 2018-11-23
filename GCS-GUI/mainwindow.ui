@@ -20,44 +20,60 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QPushButton" name="exitButton">
+   <widget class="QStackedWidget" name="stackedWidget">
     <property name="geometry">
      <rect>
-      <x>230</x>
-      <y>250</y>
-      <width>91</width>
-      <height>23</height>
+      <x>0</x>
+      <y>0</y>
+      <width>601</width>
+      <height>451</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Exit</string>
+    <property name="currentIndex">
+     <number>0</number>
     </property>
-   </widget>
-   <widget class="QPushButton" name="prepareBattleButton">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>190</y>
-      <width>111</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Prepare Battle</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="prepareCharacterButton">
-    <property name="geometry">
-     <rect>
-      <x>220</x>
-      <y>160</y>
-      <width>111</width>
-      <height>23</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Prepare Character</string>
-    </property>
+    <widget class="QWidget" name="mainMenu">
+     <widget class="QPushButton" name="prepareCharacterButton">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>130</y>
+        <width>111</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Prepare Character</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="exitButton">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>260</y>
+        <width>91</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Exit</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="prepareBattleButton">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>170</y>
+        <width>111</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Prepare Battle</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="playerCreationMenu"/>
    </widget>
   </widget>
  </widget>

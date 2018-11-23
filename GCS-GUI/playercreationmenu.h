@@ -2,8 +2,6 @@
 #define PLAYERCREATIONMENU_H
 
 #include <QDialog>
-#include <vector>
-#include "simlogic.h"
 
 namespace Ui {
 class PlayerCreationMenu;
@@ -16,9 +14,6 @@ class PlayerCreationMenu : public QDialog
 public:
     explicit PlayerCreationMenu(QWidget *parent = nullptr);
     ~PlayerCreationMenu();
-
-public slots:
-    void acquireGMData(std::vector<Weapon>);
 
 private:
     Ui::PlayerCreationMenu *ui;

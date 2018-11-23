@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+
     connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(exitApp()));
 }
 
