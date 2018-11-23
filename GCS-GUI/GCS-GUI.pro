@@ -27,27 +27,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    battlemenu.cpp \
-    playercreationmenu.cpp \
-    battlesizemenu.cpp \
-    choosefightermenu.cpp \
     simlogic.cpp
 
 HEADERS += \
         mainwindow.h \
-    battlemenu.h \
-    playercreationmenu.h \
-    battlesizemenu.h \
-    choosefightermenu.h \
     simlogic.h \
     json.hpp
 
 FORMS += \
-        mainwindow.ui \
-    battlemenu.ui \
-    playercreationmenu.ui \
-    battlesizemenu.ui \
-    choosefightermenu.ui
+        mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
