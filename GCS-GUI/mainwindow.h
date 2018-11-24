@@ -26,6 +26,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
+    GameMaster *gm;
+    Character *player;
 };
 
 #endif // MAINWINDOW_H

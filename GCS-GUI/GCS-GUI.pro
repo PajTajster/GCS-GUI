@@ -41,3 +41,11 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+DISTFILES += \
+    armours.json \
+    characters.json \
+    names.json \
+    shields.json \
+    skills.json \
+    weapons.json
