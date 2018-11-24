@@ -10,7 +10,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	playerDX(10),
 	playerHT(10),
 	playerVet(0),
-	isPlayerOutOfPoints(false)
+	isPlayerOutOfPoints(false),
+	teamSize(0)
 {
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
@@ -69,11 +70,17 @@ void MainWindow::on_prepareCharacterButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
+void MainWindow::on_prepareBattleButton_clicked()
+{
+	ui->stackedWidget->setCurrentIndex(2);
+}
 
 
-void MainWindow::on_pCDoneButton_clicked()
+void MainWindow::on_pCCharacterDoneButton_clicked()
 {
 	isPlayerInit = true;
+	ui->prepareCharacterButton->setText("Edit Character");
+	ui->prepareCharacterButton->adjustSize();
 	ui->prepareBattleButton->setEnabled(true);
 	ui->prepareBattleButton->setText("Prepare the battle");
 	ui->prepareBattleButton->adjustSize();
@@ -228,5 +235,21 @@ void MainWindow::on_shieldComboBox_currentIndexChanged(const QString &text)
 		[nameToSearch](const Shield& s) -> bool {return s.name == nameToSearch; });
 
 	player->currentShield = *searchedItem;
+}
+
+
+void MainWindow::on_bSgoBackButton_clicked()
+{
+	ui->stackedWidget->setCurrentIndex(0);
+}
+void MainWindow::on_bSteamButton_clicked()
+{
+	teamSize = 1;
+	ui->stackedWidget->setCurrentIndex(3);
+}
+void MainWindow::on_bSteamButton_2_clicked()
+{
+	teamSize = 2;
+	ui->stackedWidget->setCurrentIndex(3);
 }
 

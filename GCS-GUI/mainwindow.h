@@ -20,10 +20,11 @@ public:
 private slots:
 	// MAIN MENU
 	void on_exitButton_clicked();
+	void on_prepareCharacterButton_clicked();
+	void on_prepareBattleButton_clicked();
 
 	// PLAYER CREATION MENU
-    void on_prepareCharacterButton_clicked();
-	void on_pCDoneButton_clicked();
+	void on_pCCharacterDoneButton_clicked();
     void on_pCCancelButton_clicked();
 	void on_characterNameTextEdit_textChanged();
 	void on_STSpinBox_valueChanged(int i);
@@ -34,12 +35,19 @@ private slots:
 	void on_armourComboBox_currentIndexChanged(const QString &text);
 	void on_shieldComboBox_currentIndexChanged(const QString &text);
 
+	// BATTLE SIZE MENU
+	void on_bSgoBackButton_clicked();
+	void on_bSteamButton_clicked();
+	void on_bSteamButton_2_clicked();
+
+
 
 private:
     Ui::MainWindow *ui;
     GameMaster *gm;
     Character *player;
 
+	// Player related stuff
 	bool isPlayerInit;
 	int playerST;
 	int playerDX;
@@ -47,8 +55,10 @@ private:
 	int playerVet;
 	bool isPlayerOutOfPoints;
 
-	// Called on battle end.
-	void ReInit();
+	int teamSize;
+
+	// Called on battle end
+	//void ReInit();
 };
 
 #endif // MAINWINDOW_H

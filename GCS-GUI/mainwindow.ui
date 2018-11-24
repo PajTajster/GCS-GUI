@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>1</number>
+     <number>2</number>
     </property>
     <widget class="QWidget" name="mainMenu">
      <widget class="QPushButton" name="prepareCharacterButton">
@@ -136,7 +136,7 @@
        <rect>
         <x>160</x>
         <y>100</y>
-        <width>271</width>
+        <width>281</width>
         <height>31</height>
        </rect>
       </property>
@@ -149,7 +149,17 @@
         </widget>
        </item>
        <item>
-        <widget class="QPlainTextEdit" name="characterNameTextEdit"/>
+        <widget class="QPlainTextEdit" name="characterNameTextEdit">
+         <property name="plainText">
+          <string/>
+         </property>
+         <property name="cursorWidth">
+          <number>1</number>
+         </property>
+         <property name="placeholderText">
+          <string>Your character name</string>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
@@ -339,19 +349,6 @@
       </property>
       <property name="text">
        <string>2 vs 2</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="bSDoneButton">
-      <property name="geometry">
-       <rect>
-        <x>404</x>
-        <y>390</y>
-        <width>101</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Prepare for battle!</string>
       </property>
      </widget>
     </widget>
