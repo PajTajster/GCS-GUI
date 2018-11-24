@@ -4,18 +4,31 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    gm(new GameMaster)
+    gm(new GameMaster),
+	isPlayerInit(false)
 {
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
 
     if(!gm->InitializeGameMaster())
     {
-
+		this->close();
     }
+
+	if (!isPlayerInit)
+	{
+		ui->prepareBattleButton->setEnabled(false);
+		ui->prepareBattleButton->setText("Your character isn't ready!");
+		ui->prepareBattleButton->adjustSize();
+	}
+	else
+	{
+		ui->prepareBattleButton->setEnabled(true);
+		ui->prepareBattleButton->setText("Prepare the battle");
+		ui->prepareBattleButton->adjustSize();
+	}
     player = gm->InitBasePlayer();
 
-    connect(ui->exitButton, SIGNAL(clicked()), this, SLOT(exitApp()));
 }
 
 MainWindow::~MainWindow()
@@ -23,11 +36,6 @@ MainWindow::~MainWindow()
     delete ui;
     delete gm;
     delete player;
-}
-
-void MainWindow::exitApp()
-{
-    this->close();
 }
 
 void MainWindow::on_prepareCharacterButton_clicked()
@@ -38,4 +46,10 @@ void MainWindow::on_prepareCharacterButton_clicked()
 void MainWindow::on_pCCancelButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_exitButton_clicked()
+{
+	this->close();
+
 }

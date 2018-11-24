@@ -18,16 +18,18 @@ public:
     ~MainWindow();
 
 private slots:
-    void exitApp();
-
     void on_prepareCharacterButton_clicked();
 
     void on_pCCancelButton_clicked();
+
+	void on_exitButton_clicked();
 
 private:
     Ui::MainWindow *ui;
     GameMaster *gm;
     Character *player;
+
+	bool isPlayerInit;
 };
 
 #endif // MAINWINDOW_H
