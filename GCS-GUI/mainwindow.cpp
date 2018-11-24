@@ -20,6 +20,7 @@ MainWindow::MainWindow(QWidget *parent) :
     {
 		this->close();
     }
+	player = gm->InitBasePlayer();
 
 	if (!isPlayerInit)
 	{
@@ -33,7 +34,23 @@ MainWindow::MainWindow(QWidget *parent) :
 		ui->prepareBattleButton->setText("Prepare the battle");
 		ui->prepareBattleButton->adjustSize();
 	}
-    player = gm->InitBasePlayer();
+
+	std::vector<Weapon> weapons = gm->GetWeapons();
+	std::vector<Armour> armours = gm->GetArmours();
+	std::vector<Shield> shields = gm->GetShields();
+	for (auto& it : weapons)
+	{
+		ui->weaponComboBox->addItem(it.name.c_str());
+	}
+	for (auto &it : armours)
+	{
+		ui->armourComboBox->addItem(it.name.c_str());
+	}
+	for (auto &it : shields)
+	{
+		ui->shieldComboBox->addItem(it.name.c_str());
+	}
+	
 
 }
 
@@ -141,4 +158,48 @@ void MainWindow::on_VetSpinBox_valueChanged(int i)
 		isPlayerOutOfPoints = false;
 	playerVet = i;
 	ui->pointsLeftLabel->setText(QString::number(player->characterPoints));
+}
+void MainWindow::on_weaponComboBox_currentIndexChanged(const QString &text)
+{
+	std::string nameToSearch = text.toLocal8Bit().constData();
+	std::vector<Weapon> items = gm->GetWeapons();
+	auto searchedItem = std::find_if(items.cbegin(), items.cend(),
+		[nameToSearch](const Weapon& s) -> bool {return s.name == nameToSearch; });
+
+	player->currentWeapon = *searchedItem;
+
+	if (searchedItem->isTwoHanded)
+	{
+		ui->shieldComboBox->setEnabled(false);
+		ui->shieldLabel->setText("Both hands busy!");
+		ui->shieldLabel->adjustSize();
+		ui->shieldLabel->setAlignment(Qt::AlignHCenter);
+		ui->shieldLabel->setStyleSheet("background-color:red;");
+	}
+	else
+	{
+		ui->shieldComboBox->setEnabled(true);
+		ui->shieldLabel->setText("Shield");
+		ui->shieldLabel->adjustSize();
+		ui->shieldLabel->setAlignment(Qt::AlignHCenter);
+		ui->shieldLabel->setStyleSheet("background-color:white;");
+	}
+}
+void MainWindow::on_armourComboBox_currentIndexChanged(const QString &text)
+{
+	std::string nameToSearch = text.toLocal8Bit().constData();
+	std::vector<Armour> items = gm->GetArmours();
+	auto searchedItem = std::find_if(items.cbegin(), items.cend(),
+		[nameToSearch](const Armour& s) -> bool {return s.name == nameToSearch; });
+
+	player->currentArmour = *searchedItem;
+}
+void MainWindow::on_shieldComboBox_currentIndexChanged(const QString &text)
+{
+	std::string nameToSearch = text.toLocal8Bit().constData();
+	std::vector<Shield> items = gm->GetShields();
+	auto searchedItem = std::find_if(items.cbegin(), items.cend(),
+		[nameToSearch](const Shield& s) -> bool {return s.name == nameToSearch; });
+
+	player->currentShield = *searchedItem;
 }

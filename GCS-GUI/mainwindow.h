@@ -29,6 +29,9 @@ private slots:
 	void on_DXSpinBox_valueChanged(int i);
 	void on_HTSpinBox_valueChanged(int i);
 	void on_VetSpinBox_valueChanged(int i);
+	void on_weaponComboBox_currentIndexChanged(const QString &text);
+	void on_armourComboBox_currentIndexChanged(const QString &text);
+	void on_shieldComboBox_currentIndexChanged(const QString &text);
 
 
 private:
