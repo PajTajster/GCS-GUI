@@ -65,20 +65,45 @@ void MainWindow::on_exitButton_clicked()
 {
 	this->close();
 }
-
-
 void MainWindow::on_prepareCharacterButton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(1);
 }
+
+
+void MainWindow::on_pCDoneButton_clicked()
+{
+	isPlayerInit = true;
+	ui->prepareBattleButton->setEnabled(true);
+	ui->prepareBattleButton->setText("Prepare the battle");
+	ui->prepareBattleButton->adjustSize();
+
+	player->CalculateExtraAttributes();
+	player->CalculateSkillsDefaults();
+
+	ui->stackedWidget->setCurrentIndex(0);
+}
 void MainWindow::on_pCCancelButton_clicked()
 {
+	playerST = 10;
+	ui->STSpinBox->setValue(10);
+	playerHT = 10;
+	ui->HTSpinBox->setValue(10);
+	playerDX = 10;
+	ui->DXSpinBox->setValue(10);
+	playerVet = 0;
+	ui->VetSpinBox->setValue(0);
+
+	delete player;
+	player = gm->InitBasePlayer();
     ui->stackedWidget->setCurrentIndex(0);
 }
+
 void MainWindow::on_characterNameTextEdit_textChanged()
 {
 	player->name = ui->characterNameTextEdit->toPlainText().toLocal8Bit().constData();
 }
+
 void MainWindow::on_STSpinBox_valueChanged(int i)
 {
 	if (isPlayerOutOfPoints)
@@ -159,6 +184,7 @@ void MainWindow::on_VetSpinBox_valueChanged(int i)
 	playerVet = i;
 	ui->pointsLeftLabel->setText(QString::number(player->characterPoints));
 }
+
 void MainWindow::on_weaponComboBox_currentIndexChanged(const QString &text)
 {
 	std::string nameToSearch = text.toLocal8Bit().constData();
@@ -203,3 +229,4 @@ void MainWindow::on_shieldComboBox_currentIndexChanged(const QString &text)
 
 	player->currentShield = *searchedItem;
 }
+

@@ -23,6 +23,7 @@ private slots:
 
 	// PLAYER CREATION MENU
     void on_prepareCharacterButton_clicked();
+	void on_pCDoneButton_clicked();
     void on_pCCancelButton_clicked();
 	void on_characterNameTextEdit_textChanged();
 	void on_STSpinBox_valueChanged(int i);
