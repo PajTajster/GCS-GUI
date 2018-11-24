@@ -18,11 +18,18 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_prepareCharacterButton_clicked();
-
-    void on_pCCancelButton_clicked();
-
+	// MAIN MENU
 	void on_exitButton_clicked();
+
+	// PLAYER CREATION MENU
+    void on_prepareCharacterButton_clicked();
+    void on_pCCancelButton_clicked();
+	void on_characterNameTextEdit_textChanged();
+	void on_STSpinBox_valueChanged(int i);
+	void on_DXSpinBox_valueChanged(int i);
+	void on_HTSpinBox_valueChanged(int i);
+	void on_VetSpinBox_valueChanged(int i);
+
 
 private:
     Ui::MainWindow *ui;
@@ -30,6 +37,14 @@ private:
     Character *player;
 
 	bool isPlayerInit;
+	int playerST;
+	int playerDX;
+	int playerHT;
+	int playerVet;
+	bool isPlayerOutOfPoints;
+
+	// Called on battle end.
+	void ReInit();
 };
 
 #endif // MAINWINDOW_H
