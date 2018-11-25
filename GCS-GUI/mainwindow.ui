@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="mainMenu">
      <widget class="QPushButton" name="prepareCharacterButton">
@@ -135,9 +135,9 @@
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>100</y>
+        <y>60</y>
         <width>281</width>
-        <height>31</height>
+        <height>73</height>
        </rect>
       </property>
       <layout class="QHBoxLayout" name="horizontalLayout">
@@ -477,6 +477,9 @@
         <widget class="QRadioButton" name="team1RadioButton">
          <property name="text">
           <string>Team 1</string>
+         </property>
+         <property name="checked">
+          <bool>true</bool>
          </property>
         </widget>
        </item>

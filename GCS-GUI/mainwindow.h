@@ -61,8 +61,16 @@ private:
 
 	int teamSize;
 
+	// Fighter Choosing menu vars
+
 	int team1Size;
 	int team2Size;
+	int currentTeam; // 1 or 2
+
+	std::vector<Character> team1Chars;
+	std::vector<Character> team2Chars;
+	Character currentCharacterSelected;
+
 	// Called on battle end
 	//void ReInit();
 };

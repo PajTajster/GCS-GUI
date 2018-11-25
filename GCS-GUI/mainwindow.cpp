@@ -12,7 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
 	playerHT(10),
 	playerVet(0),
 	isPlayerOutOfPoints(false),
-	teamSize(0)
+	teamSize(0),
+	currentTeam(1)
 {
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
@@ -269,15 +270,41 @@ void MainWindow::on_bSteamButton_2_clicked()
 
 void MainWindow::on_goBackButton_2_clicked()
 {
-
+	team1Chars.clear();
+	team2Chars.clear();
+	currentTeam = 1;
 }
 void MainWindow::on_doneButton_2_clicked()
 {
-
+	if (team1Chars.size() + 1 != teamSize
+		&& team2Chars.size() != teamSize)
+	{
+		QMessageBox::warning(this, "Battle Start", "Teams are not full!");
+	}
+	else
+	{
+		team1Chars.push_back(*player);
+		gm->PrepareTeams(team1Chars, team2Chars);
+		ui->stackedWidget->setCurrentIndex(4);
+	}
 }
 void MainWindow::on_resetButton_clicked()
 {
+	switch (currentTeam)
+	{
+	case 1:
+		team1Chars.clear();
+		break;
+	case 2:
+		team2Chars.clear();
+		break;
+	default:
+		break;
+	}
 
+	QMessageBox::information(this,
+		"Reset Team " + QString::number(currentTeam),
+		"Team " + QString::number(currentTeam) + " reset!");
 }
 void MainWindow::on_selectButton_clicked()
 {
