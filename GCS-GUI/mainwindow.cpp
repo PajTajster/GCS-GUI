@@ -25,6 +25,9 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 	player = gm->InitBasePlayer();
 
+	allCharacters = gm->GetCharacters();
+	currentCharacterSelected = allCharacters[0];
+
 	if (!isPlayerInit)
 	{
 		ui->prepareBattleButton->setEnabled(false);
@@ -255,6 +258,7 @@ void MainWindow::on_bSteamButton_clicked()
 	ui->resetButton->setEnabled(false);
 
 	teamSize = 1;
+	ui->errorLabel->setText("Team current size: 1");
 	ui->stackedWidget->setCurrentIndex(3);
 }
 void MainWindow::on_bSteamButton_2_clicked()
@@ -264,6 +268,7 @@ void MainWindow::on_bSteamButton_2_clicked()
 	ui->resetButton->setEnabled(false);
 
 	teamSize = 2;
+	ui->errorLabel->setText("Team current size: 1");
 	ui->stackedWidget->setCurrentIndex(3);
 }
 
@@ -308,5 +313,47 @@ void MainWindow::on_resetButton_clicked()
 }
 void MainWindow::on_selectButton_clicked()
 {
+	switch (currentTeam)
+	{
+	case 1:
+		if (team1Chars.size() + 1 == teamSize)
+		{
+			QMessageBox::warning(this, "Select Character", "Team is full!");
+		}
+		else
+		{
+			team1Chars.push_back(currentCharacterSelected);
+			QMessageBox::information(this, "Select Character", "Character added!");
+		}
+		break;
+	case 2:
+		if (team2Chars.size() == teamSize)
+		{
+			QMessageBox::warning(this, "Select Character", "Team is full!");
+		}
+		else
+		{
+			team2Chars.push_back(currentCharacterSelected);
+			QMessageBox::information(this, "Select Character", "Character added!");
+		}
+		break;
+	default:
+		break;
+	}
+}
 
+void MainWindow::on_team1RadioButton_toggled(bool checked)
+{
+	if (checked)
+	{
+		currentTeam = 1;
+		ui->errorLabel->setText("Team current size: " +
+			QString::number(team1Chars.size() + 1));
+	}
+	else
+	{
+		currentTeam = 2;
+		ui->errorLabel->setText("Team current size: " +
+			QString::number(team2Chars.size()));
+	}
 }

@@ -45,6 +45,7 @@ private slots:
 	void on_doneButton_2_clicked();
 	void on_resetButton_clicked();
 	void on_selectButton_clicked();
+	void on_team1RadioButton_toggled(bool checked);
 
 private:
     Ui::MainWindow *ui;
@@ -70,6 +71,8 @@ private:
 	std::vector<Character> team1Chars;
 	std::vector<Character> team2Chars;
 	Character currentCharacterSelected;
+
+	std::vector<Character> allCharacters;
 
 	// Called on battle end
 	//void ReInit();
