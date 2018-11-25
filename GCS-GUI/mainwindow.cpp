@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "qmessagebox.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -78,6 +79,12 @@ void MainWindow::on_prepareBattleButton_clicked()
 
 void MainWindow::on_pCCharacterDoneButton_clicked()
 {
+	if (ui->characterNameTextEdit->toPlainText().isEmpty())
+	{
+		QMessageBox::warning(this, "Error", "Your character name is missing!");
+		return;
+	}
+
 	isPlayerInit = true;
 	ui->prepareCharacterButton->setText("Edit Character");
 	ui->prepareCharacterButton->adjustSize();
@@ -205,18 +212,16 @@ void MainWindow::on_weaponComboBox_currentIndexChanged(const QString &text)
 	{
 		ui->shieldComboBox->setEnabled(false);
 		ui->shieldLabel->setText("Both hands busy!");
-		ui->shieldLabel->adjustSize();
-		ui->shieldLabel->setAlignment(Qt::AlignHCenter);
 		ui->shieldLabel->setStyleSheet("background-color:red;");
 	}
 	else
 	{
 		ui->shieldComboBox->setEnabled(true);
 		ui->shieldLabel->setText("Shield");
-		ui->shieldLabel->adjustSize();
-		ui->shieldLabel->setAlignment(Qt::AlignHCenter);
 		ui->shieldLabel->setStyleSheet("background-color:white;");
 	}
+	ui->shieldLabel->adjustSize();
+	ui->shieldLabel->setAlignment(Qt::AlignHCenter);
 }
 void MainWindow::on_armourComboBox_currentIndexChanged(const QString &text)
 {
