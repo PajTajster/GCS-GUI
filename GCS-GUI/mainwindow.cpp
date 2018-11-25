@@ -56,8 +56,23 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		ui->shieldComboBox->addItem(it.name.c_str());
 	}
+	for (auto &it : allCharacters)
+	{
+		ui->comboBox->addItem(it.name.c_str());
+	}
 	
-
+	if (currentTeam == 1)
+	{
+		currentTeam = 1;
+		ui->errorLabel->setText("Team current size: " +
+			QString::number(team1Chars.size() + 1));
+	}
+	else
+	{
+		currentTeam = 2;
+		ui->errorLabel->setText("Team current size: " +
+			QString::number(team2Chars.size()));
+	}
 }
 
 MainWindow::~MainWindow()
@@ -258,7 +273,6 @@ void MainWindow::on_bSteamButton_clicked()
 	ui->resetButton->setEnabled(false);
 
 	teamSize = 1;
-	ui->errorLabel->setText("Team current size: 1");
 	ui->stackedWidget->setCurrentIndex(3);
 }
 void MainWindow::on_bSteamButton_2_clicked()
@@ -268,7 +282,6 @@ void MainWindow::on_bSteamButton_2_clicked()
 	ui->resetButton->setEnabled(false);
 
 	teamSize = 2;
-	ui->errorLabel->setText("Team current size: 1");
 	ui->stackedWidget->setCurrentIndex(3);
 }
 
@@ -276,8 +289,12 @@ void MainWindow::on_bSteamButton_2_clicked()
 void MainWindow::on_goBackButton_2_clicked()
 {
 	team1Chars.clear();
+	team1Size = 1;
 	team2Chars.clear();
+	team2Size = 0;
 	currentTeam = 1;
+
+	ui->stackedWidget->setCurrentIndex(2);
 }
 void MainWindow::on_doneButton_2_clicked()
 {
@@ -299,9 +316,11 @@ void MainWindow::on_resetButton_clicked()
 	{
 	case 1:
 		team1Chars.clear();
+		team1Size = 1;
 		break;
 	case 2:
 		team2Chars.clear();
+		team2Size = 0;
 		break;
 	default:
 		break;
@@ -310,6 +329,8 @@ void MainWindow::on_resetButton_clicked()
 	QMessageBox::information(this,
 		"Reset Team " + QString::number(currentTeam),
 		"Team " + QString::number(currentTeam) + " reset!");
+
+	updatedInfoLabel();
 }
 void MainWindow::on_selectButton_clicked()
 {
@@ -324,6 +345,7 @@ void MainWindow::on_selectButton_clicked()
 		{
 			team1Chars.push_back(currentCharacterSelected);
 			QMessageBox::information(this, "Select Character", "Character added!");
+			++team1Size;
 		}
 		break;
 	case 2:
@@ -335,11 +357,17 @@ void MainWindow::on_selectButton_clicked()
 		{
 			team2Chars.push_back(currentCharacterSelected);
 			QMessageBox::information(this, "Select Character", "Character added!");
+			++team2Size;
 		}
 		break;
 	default:
 		break;
 	}
+	if (!ui->resetButton->isEnabled)
+	{
+		ui->resetButton->setEnabled(true);
+	}
+	updatedInfoLabel();
 }
 
 void MainWindow::on_team1RadioButton_toggled(bool checked)
@@ -347,13 +375,45 @@ void MainWindow::on_team1RadioButton_toggled(bool checked)
 	if (checked)
 	{
 		currentTeam = 1;
-		ui->errorLabel->setText("Team current size: " +
-			QString::number(team1Chars.size() + 1));
 	}
 	else
 	{
 		currentTeam = 2;
+	}
+	updatedInfoLabel();
+}
+
+void MainWindow::on_comboBox_currentIndexChanged(int index)
+{
+	if (index == -1)
+		return;
+
+	currentCharacterSelected = allCharacters[index];
+
+	QString message = "";
+	std::vector<std::string> messageToTake = currentCharacterSelected.PrintCharacter();
+	for (auto &it : messageToTake)
+	{
+		message.append(QString::fromStdString(it) + "\n");
+	}
+
+	ui->textEdit->setText(message);
+}
+
+void MainWindow::updatedInfoLabel()
+{
+	switch (currentTeam)
+	{
+	case 1:
+		ui->errorLabel->setText("Team current size: " +
+			QString::number(team1Chars.size() + 1));
+		break;
+	case 2:
 		ui->errorLabel->setText("Team current size: " +
 			QString::number(team2Chars.size()));
+		break;
+	default:
+		break;
 	}
 }
+

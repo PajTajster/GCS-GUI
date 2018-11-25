@@ -46,6 +46,8 @@ private slots:
 	void on_resetButton_clicked();
 	void on_selectButton_clicked();
 	void on_team1RadioButton_toggled(bool checked);
+	void on_comboBox_currentIndexChanged(int index);
+	void updatedInfoLabel();
 
 private:
     Ui::MainWindow *ui;
