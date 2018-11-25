@@ -249,12 +249,37 @@ void MainWindow::on_bSgoBackButton_clicked()
 }
 void MainWindow::on_bSteamButton_clicked()
 {
+	team1Size = 1;
+	team2Size = 0;
+	ui->resetButton->setEnabled(false);
+
 	teamSize = 1;
 	ui->stackedWidget->setCurrentIndex(3);
 }
 void MainWindow::on_bSteamButton_2_clicked()
 {
+	team1Size = 1;
+	team2Size = 0;
+	ui->resetButton->setEnabled(false);
+
 	teamSize = 2;
 	ui->stackedWidget->setCurrentIndex(3);
 }
 
+
+void MainWindow::on_goBackButton_2_clicked()
+{
+
+}
+void MainWindow::on_doneButton_2_clicked()
+{
+
+}
+void MainWindow::on_resetButton_clicked()
+{
+
+}
+void MainWindow::on_selectButton_clicked()
+{
+
+}

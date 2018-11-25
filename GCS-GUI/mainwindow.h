@@ -40,7 +40,11 @@ private slots:
 	void on_bSteamButton_clicked();
 	void on_bSteamButton_2_clicked();
 
-
+	// PREPARE TEAM MENU
+	void on_goBackButton_2_clicked();
+	void on_doneButton_2_clicked();
+	void on_resetButton_clicked();
+	void on_selectButton_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -57,6 +61,8 @@ private:
 
 	int teamSize;
 
+	int team1Size;
+	int team2Size;
 	// Called on battle end
 	//void ReInit();
 };
