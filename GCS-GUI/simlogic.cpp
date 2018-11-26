@@ -965,6 +965,19 @@ void GameMaster::UpdatePlayer(Character* player)
     *player = *characterToFind;
 }
 
+void GameMaster::UpdateCharacter(Character character)
+{
+	int IDToFind = character.ID;
+
+	auto characterToFind = std::find_if(charactersInPlay.begin(), charactersInPlay.end(),
+		[IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
+
+	if (characterToFind == charactersInPlay.cend())
+		return;
+
+	*characterToFind = character;
+}
+
 int GameMaster::LoadCharacters()
 {
     std::ifstream ifs("characters.json");

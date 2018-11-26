@@ -334,8 +334,16 @@ void MainWindow::on_doneButton_2_clicked()
 			ui->comboBox_2->addItem(it.name.c_str());
 		}
 	}
+	gm->CalculateInitiative();
+
+	ui->attackTargetButton->setEnabled(false);
+	ui->surrenderButton->setEnabled(false);
+	ui->skipTurnButton->setEnabled(false);
+	ui->nextTurnButton->setEnabled(false);
+
 
 	ui->stackedWidget->setCurrentIndex(4);
+	playTurn(0);
 }
 void MainWindow::on_resetButton_clicked()
 {

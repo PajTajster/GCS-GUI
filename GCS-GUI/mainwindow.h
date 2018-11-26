@@ -49,6 +49,9 @@ private slots:
 	void on_comboBox_currentIndexChanged(int index);
 	void updatedInfoLabel();
 
+	// BATTLE SCREEN
+	void playTurn(int characterIndex);
+
 private:
     Ui::MainWindow *ui;
     GameMaster *gm;
@@ -73,6 +76,7 @@ private:
 	std::vector<Character> team1Chars;
 	std::vector<Character> team2Chars;
 	Character currentCharacterSelected;
+	int currentTargetID;
 
 	std::vector<Character> allCharacters;
 

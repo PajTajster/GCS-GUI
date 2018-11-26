@@ -171,8 +171,6 @@ protected:
     AI usedAI;
     // Checks whether NPC has selected it's prey.
     bool doesNPCHaveTarget;
-    // Current character's ID that NPC wants to do something bad.
-    int currentTargetIndex;
 public:
     // Character's ID for distinguishability.
     int ID;
@@ -190,6 +188,9 @@ public:
 
     // An array of skills character's using.
     std::vector<Skill> skills;
+
+	// Current character's ID that NPC wants to do something bad.
+	int currentTargetIndex;
 
     // ** Status Effects **
 
@@ -336,6 +337,7 @@ public:
     // Init base player (returns Character which is Player).
     Character* InitBasePlayer();
     void UpdatePlayer(Character* player);
+	void UpdateCharacter(Character character);
 
     std::vector<Character> GetCharacters();
     std::vector<Skill> GetSkills();
