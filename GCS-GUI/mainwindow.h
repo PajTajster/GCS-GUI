@@ -51,6 +51,11 @@ private slots:
 
 	// BATTLE SCREEN
 	void playTurn(int characterIndex);
+	void on_nextTurnButton_clicked();
+	void on_skipTurnButton_clicked();
+	void on_surrenderButton_clicked();
+	void on_attackTargetButton_clicked();
+	void on_comboBox_2_clicked();
 
 private:
     Ui::MainWindow *ui;

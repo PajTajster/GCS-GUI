@@ -512,3 +512,24 @@ void MainWindow::playTurn(int characterIndex)
 		ui->nextTurnButton->setEnabled(true);
 	}
 }
+
+void MainWindow::on_nextTurnButton_clicked()
+{
+
+}
+void MainWindow::on_skipTurnButton_clicked()
+{
+
+}
+void MainWindow::on_surrenderButton_clicked()
+{
+
+}
+void MainWindow::on_attackTargetButton_clicked()
+{
+
+}
+void MainWindow::on_comboBox_2_clicked()
+{
+
+}
