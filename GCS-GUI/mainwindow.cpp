@@ -302,13 +302,40 @@ void MainWindow::on_doneButton_2_clicked()
 		&& team2Size != teamSize)
 	{
 		QMessageBox::warning(this, "Battle Start", "Teams are not full!");
+		return;
 	}
-	else
+
+	team1Chars.push_back(*player);
+	gm->PrepareTeams(team1Chars, team2Chars);
+
+	std::vector<Character>& charactersInPlay = gm->GetCharactersInPlay();
+
+	int i = 0;
+	ui->charactersPresentText->appendPlainText("Team 1:\n");
+	while (charactersInPlay[i].GetTeam() == 1)
 	{
-		team1Chars.push_back(*player);
-		gm->PrepareTeams(team1Chars, team2Chars);
-		ui->stackedWidget->setCurrentIndex(4);
+		ui->charactersPresentText->appendPlainText(
+			QString::fromStdString(charactersInPlay[i].name) + "\n");
+		++i;
 	}
+	ui->charactersPresentText->appendPlainText("\n\nTeam 2:\n");
+	while (charactersInPlay[i].GetTeam() == 2)
+	{
+		ui->charactersPresentText->appendPlainText(
+			QString::fromStdString(charactersInPlay[i].name) + "\n");
+		if (++i == charactersInPlay.size())
+			break;
+	}
+
+	for (auto& it : charactersInPlay)
+	{
+		if (it.GetTeam() == 2)
+		{
+			ui->comboBox_2->addItem(it.name.c_str());
+		}
+	}
+
+	ui->stackedWidget->setCurrentIndex(4);
 }
 void MainWindow::on_resetButton_clicked()
 {
@@ -343,7 +370,7 @@ void MainWindow::on_selectButton_clicked()
 		}
 		else
 		{
-			team1Chars.push_back(currentCharacterSelected);
+			team1Chars.push_back(Character(currentCharacterSelected, true));
 			QMessageBox::information(this, "Select Character", "Character added!");
 			++team1Size;
 		}
@@ -355,7 +382,7 @@ void MainWindow::on_selectButton_clicked()
 		}
 		else
 		{
-			team2Chars.push_back(currentCharacterSelected);
+			team2Chars.push_back(Character(currentCharacterSelected, true));
 			QMessageBox::information(this, "Select Character", "Character added!");
 			++team2Size;
 		}
