@@ -272,7 +272,7 @@ void MainWindow::on_bSteamButton_clicked()
 	team2Size = 0;
 	ui->resetButton->setEnabled(false);
 
-	teamSize = 1;
+	teamSize = 2;
 	ui->stackedWidget->setCurrentIndex(3);
 }
 void MainWindow::on_bSteamButton_2_clicked()
@@ -281,7 +281,7 @@ void MainWindow::on_bSteamButton_2_clicked()
 	team2Size = 0;
 	ui->resetButton->setEnabled(false);
 
-	teamSize = 2;
+	teamSize = 1;
 	ui->stackedWidget->setCurrentIndex(3);
 }
 
@@ -298,8 +298,8 @@ void MainWindow::on_goBackButton_2_clicked()
 }
 void MainWindow::on_doneButton_2_clicked()
 {
-	if (team1Chars.size() + 1 != teamSize
-		&& team2Chars.size() != teamSize)
+	if (team1Size != teamSize
+		&& team2Size != teamSize)
 	{
 		QMessageBox::warning(this, "Battle Start", "Teams are not full!");
 	}
@@ -337,7 +337,7 @@ void MainWindow::on_selectButton_clicked()
 	switch (currentTeam)
 	{
 	case 1:
-		if (team1Chars.size() + 1 == teamSize)
+		if (team1Size == teamSize)
 		{
 			QMessageBox::warning(this, "Select Character", "Team is full!");
 		}
@@ -349,7 +349,7 @@ void MainWindow::on_selectButton_clicked()
 		}
 		break;
 	case 2:
-		if (team2Chars.size() == teamSize)
+		if (team2Size == teamSize)
 		{
 			QMessageBox::warning(this, "Select Character", "Team is full!");
 		}
@@ -363,7 +363,7 @@ void MainWindow::on_selectButton_clicked()
 	default:
 		break;
 	}
-	if (!ui->resetButton->isEnabled)
+	if (!ui->resetButton->isEnabled())
 	{
 		ui->resetButton->setEnabled(true);
 	}
@@ -406,11 +406,11 @@ void MainWindow::updatedInfoLabel()
 	{
 	case 1:
 		ui->errorLabel->setText("Team current size: " +
-			QString::number(team1Chars.size() + 1));
+			QString::number(team1Size));
 		break;
 	case 2:
 		ui->errorLabel->setText("Team current size: " +
-			QString::number(team2Chars.size()));
+			QString::number(team2Size));
 		break;
 	default:
 		break;

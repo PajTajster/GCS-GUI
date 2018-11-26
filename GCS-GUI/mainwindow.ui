@@ -36,7 +36,7 @@
      </rect>
     </property>
     <property name="currentIndex">
-     <number>3</number>
+     <number>1</number>
     </property>
     <widget class="QWidget" name="mainMenu">
      <widget class="QPushButton" name="prepareCharacterButton">
@@ -135,7 +135,7 @@
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>102</y>
+        <y>112</y>
         <width>281</width>
         <height>31</height>
        </rect>
