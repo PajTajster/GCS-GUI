@@ -47,10 +47,8 @@ private slots:
 	void on_selectButton_clicked();
 	void on_team1RadioButton_toggled(bool checked);
 	void on_comboBox_currentIndexChanged(int index);
-	void updatedInfoLabel();
 
 	// BATTLE SCREEN
-	void playTurn(int characterIndex);
 	void on_nextTurnButton_clicked();
 	void on_skipTurnButton_clicked();
 	void on_surrenderButton_clicked();
@@ -61,6 +59,7 @@ private:
     Ui::MainWindow *ui;
     GameMaster *gm;
     Character *player;
+
 
 	// Player related stuff
 	bool isPlayerInit;
@@ -94,6 +93,10 @@ private:
 	int currentTargetID;
 
 	std::vector<Character> allCharacters;
+
+	void checkForDead();
+	void updatedInfoLabel();
+	void playTurn(int characterIndex);
 
 	// Called on battle end
 	//void ReInit();

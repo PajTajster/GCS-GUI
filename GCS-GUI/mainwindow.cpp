@@ -335,10 +335,13 @@ void MainWindow::on_doneButton_2_clicked()
 			break;
 	}
 
+	int j = 0;
 	for (auto& it : charactersInPlay)
 	{
 		if (it.GetTeam() == 2)
 		{
+			baddiesID[j] = it.ID;
+			j++;
 			ui->comboBox_2->addItem(it.name.c_str());
 		}
 	}
@@ -477,28 +480,10 @@ void MainWindow::playTurn(int characterIndex)
 {
 	std::vector<Character> characters = gm->GetCharactersInPlay();
 
-	switch (teamSize)
+	checkForDead();
+	if (isGameFinished)
 	{
-	case 1:
-		if(baddiesDead[0])
-		{
-			isGameFinished = true;
-			ui->battleLogText->append("All your enemies died. Press 'Next Turn' to finish.\n");
-			ui->nextTurnButton->setEnabled(true);
-			return;
-		}
-		break;
-	case 2:
-		if (baddiesDead[0] && baddiesDead[1])
-		{
-			isGameFinished = true;
-			ui->battleLogText->append("All your enemies died. Press 'Next Turn' to finish.\n");
-			ui->nextTurnButton->setEnabled(true);
-			return;
-		}
-		break;
-	default:
-		break;
+		return;
 	}
 
 	if (currentCharacterTurn == characters.size())
@@ -511,24 +496,6 @@ void MainWindow::playTurn(int characterIndex)
 		ui->battleLogText->append("Turn " + QString::number(currentTurn + 1));
 	}
 	Character currentCharacter = characters[characterIndex];
-
-	if (currentCharacter.isDead)
-	{
-		if (currentCharacter.GetTeam() == 2)
-		{
-			int whatID = currentCharacter.ID;
-
-			if (whatID == baddiesID[0])
-			{
-				baddiesDead[0] = true;
-			}
-			else
-			{
-				baddiesDead[1] = true;
-			}
-		}
-		return;
-	}
 
 	if (!isPlayerAlive)
 	{
@@ -545,6 +512,11 @@ void MainWindow::playTurn(int characterIndex)
 
 		ui->nextTurnButton->setEnabled(true);
 
+		return;
+	}
+	if (currentCharacter.isDead)
+	{
+		ui->nextTurnButton->setEnabled(true);
 		return;
 	}
 
@@ -660,4 +632,50 @@ void MainWindow::on_comboBox_2_currentIndexChanged(int index)
 		return;
 
 	currentCharacterSelected = *searchedCharacter;
+}
+
+void MainWindow::checkForDead()
+{
+	std::vector<Character> characters = gm->GetCharactersInPlay();
+
+	for (auto& it : characters)
+	{
+		if (it.GetTeam() == 2 && it.isDead)
+		{
+			int whatID = it.ID;
+
+			if (whatID == baddiesID[0])
+			{
+				baddiesDead[0] = true;
+			}
+			else
+			{
+				baddiesDead[1] = true;
+			}
+		}
+	}
+
+	switch (teamSize)
+	{
+	case 1:
+		if (baddiesDead[0])
+		{
+			isGameFinished = true;
+			ui->battleLogText->append("All your enemies died. Press 'Next Turn' to finish.\n");
+			ui->nextTurnButton->setEnabled(true);
+			return;
+		}
+		break;
+	case 2:
+		if (baddiesDead[0] && baddiesDead[1])
+		{
+			isGameFinished = true;
+			ui->battleLogText->append("All your enemies died. Press 'Next Turn' to finish.\n");
+			ui->nextTurnButton->setEnabled(true);
+			return;
+		}
+		break;
+	default:
+		break;
+	}
 }
