@@ -55,7 +55,7 @@ private slots:
 	void on_skipTurnButton_clicked();
 	void on_surrenderButton_clicked();
 	void on_attackTargetButton_clicked();
-	void on_comboBox_2_clicked();
+	void on_comboBox_2_currentIndexChanhed(int index);
 
 private:
     Ui::MainWindow *ui;
@@ -85,6 +85,7 @@ private:
 
 	int currentTurn;
 	int currentCharacterTurn;
+	int baddiesID[2];
 
 	std::vector<Character> team1Chars;
 	std::vector<Character> team2Chars;

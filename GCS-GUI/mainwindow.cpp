@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
 
+	baddiesID[0] = -1;
+	baddiesID[1] = -1;
 
     if(!gm->InitializeGameMaster())
     {
@@ -345,6 +347,7 @@ void MainWindow::on_doneButton_2_clicked()
 
 
 	ui->battleLogText->append("BATTLE STARTED\nTurn 1");
+	currentCharacterSelected = team2Chars[0];
 
 	ui->stackedWidget->setCurrentIndex(4);
 	playTurn(0);
@@ -482,6 +485,7 @@ void MainWindow::playTurn(int characterIndex)
 	{
 		++currentTurn;
 		currentCharacterTurn = 0;
+		characterIndex = 0;
 		gm->NextTurn();
 	}
 
@@ -515,21 +519,64 @@ void MainWindow::playTurn(int characterIndex)
 
 void MainWindow::on_nextTurnButton_clicked()
 {
+	++currentCharacterTurn;
 
+	ui->nextTurnButton->setEnabled(false);
+
+	playTurn(currentCharacterTurn);
 }
 void MainWindow::on_skipTurnButton_clicked()
 {
+	++currentCharacterTurn;
 
+	ui->battleLogText->append("You've decided to skip the turn.\n");
+
+	ui->skipTurnButton->setEnabled(false);
+	ui->surrenderButton->setEnabled(false);
+	ui->attackTargetButton->setEnabled(false);
+
+	playTurn(currentCharacterTurn);
 }
 void MainWindow::on_surrenderButton_clicked()
 {
+	ui->battleLogText->append("You've surrendered. Game over. \nPress 'Next Turn' to proceed");
+	ui->stackedWidget->setCurrentIndex(0);
+	ui->skipTurnButton->setEnabled(false);
+	ui->surrenderButton->setEnabled(false);
+	ui->attackTargetButton->setEnabled(false);
 
+	ui->nextTurnButton->setEnabled(true);
 }
 void MainWindow::on_attackTargetButton_clicked()
 {
+	QString messageToLog;
+	messageToLog = QString::fromStdString(player->Attack(currentCharacterSelected));
 
+	ui->battleLogText->append(messageToLog + "\n");
+
+	gm->UpdateCharacter(currentCharacterSelected);
+	gm->UpdatePlayer(player);
+
+	ui->skipTurnButton->setEnabled(false);
+	ui->surrenderButton->setEnabled(false);
+	ui->attackTargetButton->setEnabled(false);
+
+	ui->nextTurnButton->setEnabled(true);
 }
-void MainWindow::on_comboBox_2_clicked()
+void MainWindow::on_comboBox_2_currentIndexChanhed(int index)
 {
+	if (index == -1)
+		return;
 
+	int IDToFind = baddiesID[index];
+	std::vector<Character> allcharacters = gm->GetCharactersInPlay();
+
+
+	auto searchedCharacter = std::find_if(allcharacters.cbegin(), allcharacters.cend(),
+		[IDToFind](const Character& c) -> bool {return c.ID == IDToFind; });
+
+	if (searchedCharacter == allcharacters.cend())
+		return;
+
+	currentCharacterSelected = *searchedCharacter;
 }
