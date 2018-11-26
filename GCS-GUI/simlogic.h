@@ -317,7 +317,7 @@ public:
 
     // Run through all the present characters and refresh their
     // actions and decrement knockdowntimer (if they have one active).
-    void NextTurn(std::vector<Character>& updatedVector);
+    void NextTurn();
 
     // Clears team and charactersInPlay vector.
     void ClearBattleData();
@@ -335,7 +335,7 @@ public:
     bool InitializeGameMaster();
     // Init base player (returns Character which is Player).
     Character* InitBasePlayer();
-    void UpdatePlayer(Character* player, std::vector<Character>& updatedVector);
+    void UpdatePlayer(Character* player);
 
     std::vector<Character> GetCharacters();
     std::vector<Skill> GetSkills();

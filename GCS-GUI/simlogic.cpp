@@ -819,9 +819,9 @@ void GameMaster::CalculateInitiative()
         });
 }
 
-void GameMaster::NextTurn(std::vector<Character>& updatedVector)
+void GameMaster::NextTurn()
 {
-    for (auto& i : updatedVector)
+    for (auto& i : charactersInPlay)
     {
         if (i.isDead)
             continue;
@@ -952,14 +952,14 @@ Character* GameMaster::InitBasePlayer()
     return player;
 }
 
-void GameMaster::UpdatePlayer(Character* player, std::vector<Character>& updatedVector)
+void GameMaster::UpdatePlayer(Character* player)
 {
     int IDToFind = player->ID;
 
-    auto characterToFind = std::find_if(updatedVector.cbegin(), updatedVector.cend(),
+    auto characterToFind = std::find_if(charactersInPlay.cbegin(), charactersInPlay.cend(),
         [IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
 
-    if (characterToFind == updatedVector.cend())
+    if (characterToFind == charactersInPlay.cend())
         return;
 
     *player = *characterToFind;
