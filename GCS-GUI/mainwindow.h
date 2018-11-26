@@ -82,7 +82,7 @@ private:
 	int currentTeam; // 1 or 2
 
 	// Battle Menu vars
-
+	bool isGameFinished;
 	int currentTurn;
 	int currentCharacterTurn;
 	int baddiesID[2];

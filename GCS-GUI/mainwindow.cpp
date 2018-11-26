@@ -3,9 +3,9 @@
 #include "qmessagebox.h"
 
 MainWindow::MainWindow(QWidget *parent) :
-    QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    gm(new GameMaster),
+	QMainWindow(parent),
+	ui(new Ui::MainWindow),
+	gm(new GameMaster),
 	isPlayerInit(false),
 	playerST(10),
 	playerDX(10),
@@ -15,7 +15,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	teamSize(0),
 	currentTeam(1),
 	currentTurn(0),
-	currentCharacterTurn(0)
+	currentCharacterTurn(0),
+	isGameFinished(0),
+	isPlayerAlive(true)
 {
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
@@ -466,59 +468,76 @@ void MainWindow::playTurn(int characterIndex)
 {
 	std::vector<Character> characters = gm->GetCharactersInPlay();
 
-	Character currentCharacter = characters[characterIndex];
-
-	if (!isPlayerAlive)
-	{
-		// player ded.
-	}
-
-	if (currentCharacter.isDead)
-	{
-		if (currentCharacter.isPlayer)
-		{
-			
-		}
-	}
-
-	if (currentCharacterTurn * 2 == teamSize)
+	if (currentCharacterTurn == characters.size())
 	{
 		++currentTurn;
 		currentCharacterTurn = 0;
 		characterIndex = 0;
 		gm->NextTurn();
+
+		ui->battleLogText->append("Turn " + QString::number(currentTurn + 1));
 	}
+	Character currentCharacter = characters[characterIndex];
 
-	QString messageToLog;
-
-	if (currentCharacter.isPlayer)
+	if (currentCharacter.isKnockedDown)
 	{
-		ui->battleLogText->append("Your turn\n");
-		ui->skipTurnButton->setEnabled(true);
-		ui->attackTargetButton->setEnabled(true);
-		ui->surrenderButton->setEnabled(true);
-		ui->nextTurnButton->setEnabled(false);
-	}
-	else
-	{
-		messageToLog = QString::fromStdString(currentCharacter.NPCAssessSituation(characters));
-		gm->UpdateCharacter(currentCharacter);
-		gm->UpdateCharacter(characters[currentCharacter.currentTargetIndex]);
-		gm->UpdatePlayer(player);
-		if (player->isDead)
-			isPlayerAlive = false;
+		ui->battleLogText->append(QString::fromStdString(currentCharacter.name) +
+			" is knocked down for: " + QString::number(currentCharacter.knockDownTimer) + " turns.");
 
-		ui->battleLogText->append(messageToLog + "\n");
-
-		ui->skipTurnButton->setEnabled(false);
-		ui->attackTargetButton->setEnabled(false);
-		ui->surrenderButton->setEnabled(false);
 		ui->nextTurnButton->setEnabled(true);
+
+		return;
 	}
+
+	if (!isPlayerAlive)
+	{
+		isGameFinished = true;
+		ui->battleLogText->append("You died. Game over.\n\nPress 'Next Turn' to finish.");
+		ui->nextTurnButton->setEnabled(true);
+		return;
+	}
+
+	if (!currentCharacter.isDead)
+	{
+		QString messageToLog;
+
+		if (currentCharacter.isPlayer)
+		{
+			ui->battleLogText->append("Your turn\n");
+			ui->skipTurnButton->setEnabled(true);
+			ui->attackTargetButton->setEnabled(true);
+			ui->surrenderButton->setEnabled(true);
+			ui->nextTurnButton->setEnabled(false);
+		}
+		else
+		{
+			messageToLog = QString::fromStdString(currentCharacter.NPCAssessSituation(characters));
+			gm->UpdateCharacter(currentCharacter);
+			gm->UpdateCharacter(characters[currentCharacter.currentTargetIndex]);
+			gm->UpdatePlayer(player);
+			if (player->isDead)
+				isPlayerAlive = false;
+
+			ui->battleLogText->append(messageToLog + "\n");
+
+			ui->skipTurnButton->setEnabled(false);
+			ui->attackTargetButton->setEnabled(false);
+			ui->surrenderButton->setEnabled(false);
+			ui->nextTurnButton->setEnabled(true);
+		}
+	}
+
+
 }
 
 void MainWindow::on_nextTurnButton_clicked()
 {
+	if (isGameFinished)
+	{
+		ui->stackedWidget->setCurrentIndex(0);
+		return;
+	}
+
 	++currentCharacterTurn;
 
 	ui->nextTurnButton->setEnabled(false);
