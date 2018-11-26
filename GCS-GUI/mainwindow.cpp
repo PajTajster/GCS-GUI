@@ -314,7 +314,7 @@ void MainWindow::on_doneButton_2_clicked()
 	team1Chars.push_back(*player);
 	gm->PrepareTeams(team1Chars, team2Chars);
 
-	std::vector<Character>& charactersInPlay = gm->GetCharactersInPlay();
+	std::vector<Character> charactersInPlay = gm->GetCharactersInPlay();
 
 	int i = 0;
 	ui->charactersPresentText->appendPlainText("Team 1:\n");
@@ -568,13 +568,20 @@ void MainWindow::on_surrenderButton_clicked()
 }
 void MainWindow::on_attackTargetButton_clicked()
 {
-	QString messageToLog;
-	messageToLog = QString::fromStdString(player->Attack(currentCharacterSelected));
+	if (currentCharacterSelected.isDead)
+	{
+		ui->battleLogText->append("Target's dead.");
+	}
+	else
+	{
+		QString messageToLog;
+		messageToLog = QString::fromStdString(player->Attack(currentCharacterSelected));
 
-	ui->battleLogText->append(messageToLog + "\n");
+		ui->battleLogText->append(messageToLog + "\n");
 
-	gm->UpdateCharacter(currentCharacterSelected);
-	gm->UpdatePlayer(player);
+		gm->UpdateCharacter(currentCharacterSelected);
+		gm->UpdatePlayer(player);
+	}
 
 	ui->skipTurnButton->setEnabled(false);
 	ui->surrenderButton->setEnabled(false);

@@ -689,16 +689,14 @@ void Character::NPCSelectTarget(std::vector<Character>& charactersToChoose)
     case AI_TARGET_RANDOM:
     {
         int randTarget = 0;
-        randTarget = rand() % charactersToChoose.size();
 
-        while (charactersToChoose[randTarget].ID == this->ID ||
-            charactersToChoose[randTarget].team == this->team ||
-            charactersToChoose[randTarget].isDead)
+		do
         {
             randTarget = rand() % charactersToChoose.size();
             foundTarget = true;
-        }
-
+		} while (charactersToChoose[randTarget].ID == this->ID ||
+			charactersToChoose[randTarget].team == this->team ||
+			charactersToChoose[randTarget].isDead);
 
 
         currentTargetIndex = randTarget;
