@@ -64,6 +64,9 @@ private:
 	int playerHT;
 	int playerVet;
 	bool isPlayerOutOfPoints;
+	bool isPlayerAlive;
+
+	bool allEnemiesDead;
 
 	int teamSize;
 
@@ -72,6 +75,11 @@ private:
 	int team1Size;
 	int team2Size;
 	int currentTeam; // 1 or 2
+
+	// Battle Menu vars
+
+	int currentTurn;
+	int currentCharacterTurn;
 
 	std::vector<Character> team1Chars;
 	std::vector<Character> team2Chars;

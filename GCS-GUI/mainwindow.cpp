@@ -13,7 +13,9 @@ MainWindow::MainWindow(QWidget *parent) :
 	playerVet(0),
 	isPlayerOutOfPoints(false),
 	teamSize(0),
-	currentTeam(1)
+	currentTeam(1),
+	currentTurn(0),
+	currentCharacterTurn(0)
 {
     ui->setupUi(this);
     ui->stackedWidget->setCurrentIndex(0);
@@ -342,6 +344,8 @@ void MainWindow::on_doneButton_2_clicked()
 	ui->nextTurnButton->setEnabled(false);
 
 
+	ui->battleLogText->append("BATTLE STARTED\nTurn 1");
+
 	ui->stackedWidget->setCurrentIndex(4);
 	playTurn(0);
 }
@@ -452,3 +456,41 @@ void MainWindow::updatedInfoLabel()
 	}
 }
 
+
+
+
+void MainWindow::playTurn(int characterIndex)
+{
+	std::vector<Character> characters = gm->GetCharactersInPlay();
+
+	Character currentCharacter = characters[characterIndex];
+
+	if (currentCharacter.isDead)
+		return;
+
+	if (currentCharacterTurn * 2 == teamSize)
+	{
+		++currentTurn;
+		currentCharacterTurn = 0;
+		gm->NextTurn();
+	}
+	if (!isPlayerAlive)
+	{
+		// player ded.
+	}
+
+	QString messageToLog;
+
+	if (currentCharacter.isPlayer)
+	{
+
+	}
+	else
+	{
+		messageToLog = QString::fromStdString(currentCharacter.NPCAssessSituation(characters));
+		gm->UpdateCharacter(currentCharacter);
+		gm->UpdateCharacter(characters[currentCharacter.currentTargetIndex]);
+	}
+
+
+}
