@@ -99,7 +99,7 @@ private:
 	void playTurn(int characterIndex);
 
 	// Called on battle end
-	//void ReInit();
+	void ReInit();
 };
 
 #endif // MAINWINDOW_H

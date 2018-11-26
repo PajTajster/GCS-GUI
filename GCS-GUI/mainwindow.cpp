@@ -553,6 +553,7 @@ void MainWindow::on_nextTurnButton_clicked()
 {
 	if (isGameFinished)
 	{
+		ReInit();
 		ui->stackedWidget->setCurrentIndex(0);
 		return;
 	}
@@ -678,4 +679,61 @@ void MainWindow::checkForDead()
 	default:
 		break;
 	}
+}
+
+void MainWindow::ReInit()
+{
+	ui->STSpinBox->setValue(10);
+	ui->DXSpinBox->setValue(10);
+	ui->HTSpinBox->setValue(10);
+	ui->VetSpinBox->setValue(0);
+	ui->pCCharacterPointsLabel->setText("100");
+
+	team1Chars.clear();
+	team2Chars.clear();
+	team1Size = 1;
+	team2Size = 0;
+
+	player = gm->InitBasePlayer();
+	isPlayerInit = false;
+	playerST = 10;
+	playerDX = 10;
+	playerHT = 10;
+	playerVet = 0;
+	isPlayerOutOfPoints = false;
+	teamSize = 0;
+	currentTeam = 1;
+	currentTurn = 0;
+	currentCharacterTurn = 0;
+	isGameFinished = false;
+	isPlayerAlive = true;
+	baddiesID[0] = -1;
+	baddiesID[1] = -1;
+	baddiesDead[0] = false;
+	baddiesDead[1] = false;
+	currentCharacterSelected = allCharacters[0];
+	if (!isPlayerInit)
+	{
+		ui->prepareBattleButton->setEnabled(false);
+		ui->prepareBattleButton->setText("Your character isn't ready!");
+		ui->prepareBattleButton->adjustSize();
+	}
+	else
+	{
+		ui->prepareBattleButton->setEnabled(true);
+		ui->prepareBattleButton->setText("Prepare the battle");
+		ui->prepareBattleButton->adjustSize();
+	}
+	if (currentTeam == 1)
+	{
+		currentTeam = 1;
+		ui->errorLabel->setText("Team current size: " +
+			QString::number(team1Chars.size() + 1));
+	}
+	else
+	{
+		currentTeam = 2;
+		ui->errorLabel->setText("Team current size: " +
+			QString::number(team2Chars.size()));
+	}	
 }
