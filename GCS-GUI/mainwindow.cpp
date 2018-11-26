@@ -465,8 +465,18 @@ void MainWindow::playTurn(int characterIndex)
 
 	Character currentCharacter = characters[characterIndex];
 
+	if (!isPlayerAlive)
+	{
+		// player ded.
+	}
+
 	if (currentCharacter.isDead)
-		return;
+	{
+		if (currentCharacter.isPlayer)
+		{
+			
+		}
+	}
 
 	if (currentCharacterTurn * 2 == teamSize)
 	{
@@ -474,23 +484,31 @@ void MainWindow::playTurn(int characterIndex)
 		currentCharacterTurn = 0;
 		gm->NextTurn();
 	}
-	if (!isPlayerAlive)
-	{
-		// player ded.
-	}
 
 	QString messageToLog;
 
 	if (currentCharacter.isPlayer)
 	{
-
+		ui->battleLogText->append("Your turn\n");
+		ui->skipTurnButton->setEnabled(true);
+		ui->attackTargetButton->setEnabled(true);
+		ui->surrenderButton->setEnabled(true);
+		ui->nextTurnButton->setEnabled(false);
 	}
 	else
 	{
 		messageToLog = QString::fromStdString(currentCharacter.NPCAssessSituation(characters));
 		gm->UpdateCharacter(currentCharacter);
 		gm->UpdateCharacter(characters[currentCharacter.currentTargetIndex]);
+		gm->UpdatePlayer(player);
+		if (player->isDead)
+			isPlayerAlive = false;
+
+		ui->battleLogText->append(messageToLog + "\n");
+
+		ui->skipTurnButton->setEnabled(false);
+		ui->attackTargetButton->setEnabled(false);
+		ui->surrenderButton->setEnabled(false);
+		ui->nextTurnButton->setEnabled(true);
 	}
-
-
 }
