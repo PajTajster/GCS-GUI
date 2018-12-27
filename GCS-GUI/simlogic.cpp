@@ -807,6 +807,267 @@ Character::~Character()
 }
 
 
+int DataLoader::LoadCharacters()
+{
+	std::ifstream ifs("characters.json");
+	if (!ifs.good())
+	{
+		return -1;
+	}
+	json j = json::parse(ifs);
+
+	json charactersArray = j["characters"];
+
+
+	for (auto& it : charactersArray)
+	{
+		int newST = it["strength"];
+		int newDX = it["dexterity"];
+		int newHT = it["health"];
+		int newVet = it["veterancy"];
+		std::string newName = it["name"];
+		std::string newWeap = it["weapon"];
+		std::string newArm = it["armour"];
+		std::string newShld = it["shield"];
+
+
+		// Checks if character is using items loaded previously. If not, it won't be added.
+
+		// Weapon
+		std::string nameToSearch = newWeap;
+
+		auto searchedWeapon = std::find_if(allWeapons.cbegin(), allWeapons.cend(),
+			[nameToSearch](const Weapon& w) -> bool {return w.name == nameToSearch; });
+
+		Weapon newWeapon;
+
+		// Take default one if failed to load.
+		if (searchedWeapon == allWeapons.cend())
+			newWeapon = allWeapons[0];
+		else
+			newWeapon = *searchedWeapon;
+
+		// Armour
+		nameToSearch = newArm;
+
+		auto searchedArmour = std::find_if(allArmours.cbegin(), allArmours.cend(),
+			[nameToSearch](const Armour& a) -> bool {return a.name == nameToSearch; });
+
+		Armour newArmour;
+
+		// Take default one if failed to load.
+		if (searchedArmour == allArmours.cend())
+			newArmour = allArmours[0];
+		else
+			newArmour = *searchedArmour;
+
+		// Shield
+		nameToSearch = newShld;
+
+		auto searchedShield = std::find_if(allShields.cbegin(), allShields.cend(),
+			[nameToSearch](const Shield& s) -> bool {return s.name == nameToSearch; });
+
+		Shield newShield;
+
+		// Take default one if failed to load.
+		if (searchedShield == allShields.cend())
+			newShield = allShields[0];
+		else
+			newShield = *searchedShield;
+
+		Character newCharacter;
+		newCharacter.InitializeCharacter(newST, newDX, newHT, newVet,
+			newName, allSkills, newWeapon, newArmour, newShield);
+
+		allCharacters.push_back(newCharacter);
+	}
+	return 0;
+}
+int DataLoader::LoadSkills()
+{
+	std::ifstream ifs("skills.json");
+	if (!ifs.good())
+	{
+		return -1;
+	}
+	json j = json::parse(ifs);
+
+	json skillsArray = j["skills"];
+
+	for (auto& it : skillsArray)
+	{
+		std::string newName = it["name"];
+		std::string newDefAtt = it["defaultAtt"];
+		std::string newDefOptAtt = it["defaultOptionalAtt"];
+		int newDefBonus = it["defaultBonus"];
+
+		bool newNoDefaults;
+		if (newDefAtt == "None")
+			newNoDefaults = true;
+		else
+			newNoDefaults = false;
+
+		Skill newSkill(newName, newDefAtt,
+			newDefOptAtt, newDefBonus, newNoDefaults);
+
+		allSkills.push_back(newSkill);
+	}
+
+	return 0;
+}
+int DataLoader::LoadArmours()
+{
+	std::ifstream ifs("armours.json");
+	if (!ifs.good())
+	{
+		return -1;
+	}
+	json j = json::parse(ifs);
+
+	json armoursArray = j["armours"];
+
+	for (auto& it : armoursArray)
+	{
+		std::string newName = it["name"].get<std::string>();
+		int newPD = it["passiveDefence"];
+		int newDR = it["damageResistance"];
+
+		Armour newArmour(newName, newPD, newDR);
+
+		allArmours.push_back(newArmour);
+	}
+	return 0;
+}
+int DataLoader::LoadWeapons()
+{
+	std::ifstream ifs("weapons.json");
+	if (!ifs.good())
+	{
+		return -1;
+	}
+	json j = json::parse(ifs);
+
+	json weaponsArray = j["weapons"];
+
+	for (auto& it : weaponsArray)
+	{
+		std::string newName = it["name"];
+		int newDD = it["damageDices"];
+		int newDB = it["damageBonus"];
+		std::string newSkillName = it["skillName"];
+		bool newIsM = it["isMelee"];
+		bool newIsTH = it["isTwoHanded"];
+		int newRoF = it["rateOfFire"];
+
+		// Check if the skill used by weapon exists in skills vector.
+		auto foundSkill = std::find_if(allSkills.cbegin(), allSkills.cend(),
+			[newSkillName](const Skill& s) -> bool {return s.name == newSkillName; });
+
+		// If not, weapon won't be added.
+		if (foundSkill != allSkills.cend())
+		{
+			Damage newDamage;
+			newDamage.dices = newDD;
+			newDamage.bonus = newDB;
+
+			// Take skill from the iterator.
+			std::string newSkill = foundSkill->name;
+
+			Weapon newWeapon(newName, newDamage, newSkill,
+				newIsM, newRoF, newIsTH);
+
+			allWeapons.push_back(newWeapon);
+		}
+	}
+	return 0;
+}
+int DataLoader::LoadShields()
+{
+	std::ifstream ifs("shields.json");
+	if (!ifs.good())
+	{
+		return -1;
+	}
+	json j = json::parse(ifs);
+
+	json shieldsArray = j["shields"];
+
+	for (auto& it : shieldsArray)
+	{
+		std::string newName = it["name"];
+		int newBonus = it["bonus"];
+
+		Shield newShield(newName, newBonus);
+
+		allShields.push_back(newShield);
+	}
+	return 0;
+}
+int DataLoader::LoadNames()
+{
+	std::ifstream ifs("names.json");
+
+	if (!ifs.good())
+	{
+		return -1;
+	}
+
+	json j = json::parse(ifs);
+
+	json namesArray = j["names"];
+
+	for (auto& it : namesArray)
+	{
+		std::string newName = it;
+
+		names.push_back(newName);
+	}
+
+	return 0;
+}
+
+
+int DataLoader::LoadData()
+{
+	// Init data
+	if (LoadNames() == -1)
+		return false;
+	if (LoadSkills() == -1)
+		return false;
+	if (LoadArmours() == -1)
+		return false;
+	if (LoadShields() == -1)
+		return false;
+	if (LoadWeapons() == -1)
+		return false;
+	if (LoadCharacters() == -1)
+		return false;
+
+	return true;
+}
+
+std::vector<Character> DataLoader::GetCharacters() { return allCharacters; }
+std::vector<Skill> DataLoader::GetSkills() { return allSkills; }
+std::vector<Armour> DataLoader::GetArmours() { return allArmours; }
+std::vector<Weapon> DataLoader::GetWeapons() { return allWeapons; }
+std::vector<Shield> DataLoader::GetShields() { return allShields; }
+
+DataLoader::~DataLoader()
+{
+	names.clear();
+	allCharacters.clear();
+	allSkills.clear();
+	allArmours.clear();
+	allWeapons.clear();
+	allShields.clear();
+}
+
+GameMaster& GameMaster::GetInstance()
+{
+	static GameMaster instance;
+
+	return instance;
+}
 
 void GameMaster::CalculateInitiative()
 {
@@ -912,23 +1173,14 @@ void GameMaster::RandomizeName(Character& c)
     c.name = newName;
 }
 
-bool GameMaster::InitializeGameMaster()
+int GameMaster::InitializeGameMaster()
 {
-    // Init data
-    if (LoadNames() == -1)
-        return false;
-    if (LoadSkills() == -1)
-        return false;
-    if (LoadArmours() == -1)
-        return false;
-    if (LoadShields() == -1)
-        return false;
-    if (LoadWeapons() == -1)
-        return false;
-    if (LoadCharacters() == -1)
-        return false;
+	if (dataLoader.LoadData())
+	{
+		return -1;
+	}
 
-    return true;
+    return 0;
 }
 
 Character* GameMaster::InitBasePlayer()
@@ -976,262 +1228,26 @@ void GameMaster::UpdateCharacter(Character character)
 	*characterToFind = character;
 }
 
-int GameMaster::LoadCharacters()
-{
-    std::ifstream ifs("characters.json");
-    if (!ifs.good())
-    {
-        return -1;
-    }
-    json j = json::parse(ifs);
-
-    json charactersArray = j["characters"];
-
-
-    for (auto& it : charactersArray)
-    {
-        int newST = it["strength"];
-        int newDX = it["dexterity"];
-        int newHT = it["health"];
-        int newVet = it["veterancy"];
-        std::string newName = it["name"];
-        std::string newWeap = it["weapon"];
-        std::string newArm = it["armour"];
-        std::string newShld = it["shield"];
-
-
-        // Checks if character is using items loaded previously. If not, it won't be added.
-
-        // Weapon
-        std::string nameToSearch = newWeap;
-
-        auto searchedWeapon = std::find_if(allWeapons.cbegin(), allWeapons.cend(),
-            [nameToSearch](const Weapon& w) -> bool {return w.name == nameToSearch; });
-
-        Weapon newWeapon;
-
-        // Take default one if failed to load.
-        if (searchedWeapon == allWeapons.cend())
-            newWeapon = allWeapons[0];
-        else
-            newWeapon = *searchedWeapon;
-
-        // Armour
-        nameToSearch = newArm;
-
-        auto searchedArmour = std::find_if(allArmours.cbegin(), allArmours.cend(),
-            [nameToSearch](const Armour& a) -> bool {return a.name == nameToSearch; });
-
-        Armour newArmour;
-
-        // Take default one if failed to load.
-        if (searchedArmour == allArmours.cend())
-            newArmour = allArmours[0];
-        else
-            newArmour = *searchedArmour;
-
-        // Shield
-        nameToSearch = newShld;
-
-        auto searchedShield = std::find_if(allShields.cbegin(), allShields.cend(),
-            [nameToSearch](const Shield& s) -> bool {return s.name == nameToSearch; });
-
-        Shield newShield;
-
-        // Take default one if failed to load.
-        if (searchedShield == allShields.cend())
-            newShield = allShields[0];
-        else
-            newShield = *searchedShield;
-
-        Character newCharacter;
-        newCharacter.InitializeCharacter(newST, newDX, newHT, newVet,
-            newName, allSkills, newWeapon, newArmour, newShield);
-
-        allCharacters.push_back(newCharacter);
-    }
-    return 0;
-}
-
-int GameMaster::LoadSkills()
-{
-    std::ifstream ifs("skills.json");
-    if (!ifs.good())
-    {
-        return -1;
-    }
-    json j = json::parse(ifs);
-
-    json skillsArray = j["skills"];
-
-    for (auto& it : skillsArray)
-    {
-        std::string newName = it["name"];
-        std::string newDefAtt = it["defaultAtt"];
-        std::string newDefOptAtt = it["defaultOptionalAtt"];
-        int newDefBonus = it["defaultBonus"];
-
-        bool newNoDefaults;
-        if (newDefAtt == "None")
-            newNoDefaults = true;
-        else
-            newNoDefaults = false;
-
-        Skill newSkill(newName, newDefAtt,
-            newDefOptAtt, newDefBonus, newNoDefaults);
-
-        allSkills.push_back(newSkill);
-    }
-
-    return 0;
-}
-
-int GameMaster::LoadArmours()
-{
-    std::ifstream ifs("armours.json");
-    if (!ifs.good())
-    {
-        return -1;
-    }
-    json j = json::parse(ifs);
-
-    json armoursArray = j["armours"];
-
-    for (auto& it: armoursArray)
-    {
-        std::string newName = it["name"].get<std::string>();
-        int newPD = it["passiveDefence"];
-        int newDR = it["damageResistance"];
-
-        Armour newArmour(newName, newPD, newDR);
-
-        allArmours.push_back(newArmour);
-    }
-    return 0;
-}
-
-int GameMaster::LoadWeapons()
-{
-    std::ifstream ifs("weapons.json");
-    if (!ifs.good())
-    {
-        return -1;
-    }
-    json j = json::parse(ifs);
-
-    json weaponsArray = j["weapons"];
-
-    for (auto& it : weaponsArray)
-    {
-        std::string newName = it["name"];
-        int newDD = it["damageDices"];
-        int newDB = it["damageBonus"];
-        std::string newSkillName = it["skillName"];
-        bool newIsM = it["isMelee"];
-        bool newIsTH = it["isTwoHanded"];
-        int newRoF = it["rateOfFire"];
-
-        // Check if the skill used by weapon exists in skills vector.
-        auto foundSkill = std::find_if(allSkills.cbegin(), allSkills.cend(),
-            [newSkillName](const Skill& s) -> bool {return s.name == newSkillName; });
-
-        // If not, weapon won't be added.
-        if (foundSkill != allSkills.cend())
-        {
-            Damage newDamage;
-            newDamage.dices = newDD;
-            newDamage.bonus = newDB;
-
-            // Take skill from the iterator.
-            std::string newSkill = foundSkill->name;
-
-            Weapon newWeapon(newName, newDamage, newSkill,
-                    newIsM, newRoF, newIsTH);
-
-            allWeapons.push_back(newWeapon);
-        }
-    }
-    return 0;
-}
-
-int GameMaster::LoadShields()
-{
-    std::ifstream ifs("shields.json");
-    if (!ifs.good())
-    {
-        return -1;
-    }
-    json j = json::parse(ifs);
-
-    json shieldsArray = j["shields"];
-
-    for (auto& it : shieldsArray)
-    {
-        std::string newName = it["name"];
-        int newBonus = it["bonus"];
-
-        Shield newShield(newName, newBonus);
-
-        allShields.push_back(newShield);
-    }
-    return 0;
-}
-
-int GameMaster::LoadNames()
-{
-    std::ifstream ifs("names.json");
-
-    if (!ifs.good())
-    {
-        return -1;
-    }
-
-    json j = json::parse(ifs);
-
-    json namesArray = j["names"];
-
-    for (auto& it : namesArray)
-    {
-        std::string newName = it;
-
-        names.push_back(newName);
-    }
-
-    return 0;
-}
-
 std::vector<Character> GameMaster::GetCharacters()
 {
-    return allCharacters;
+	return dataLoader.GetCharacters();
 }
 std::vector<Skill> GameMaster::GetSkills()
 {
-    return allSkills;
+	return dataLoader.GetSkills();
 }
 std::vector<Armour> GameMaster::GetArmours()
 {
-    return allArmours;
+	return dataLoader.GetArmours();
 }
 std::vector<Weapon> GameMaster::GetWeapons()
 {
-    return allWeapons;
+	return dataLoader.GetWeapons();
 }
 std::vector<Shield> GameMaster::GetShields()
 {
-    return allShields;
+	return dataLoader.GetShields();
 }
 std::vector<Character>& GameMaster::GetCharactersInPlay(){ return charactersInPlay; }
 
 GameMaster::GameMaster() { }
-
-GameMaster::~GameMaster()
-{
-    allCharacters.clear();
-    allSkills.clear();
-    allArmours.clear();
-    allWeapons.clear();
-
-    charactersInPlay.clear();
-    team1.clear();
-    team2.clear();
-}

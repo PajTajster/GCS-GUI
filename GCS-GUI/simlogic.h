@@ -310,9 +310,7 @@ public:
 	std::vector<Armour> GetArmours();
 	std::vector<Weapon> GetWeapons();
 	std::vector<Shield> GetShields();
-	std::vector<Character>& GetCharactersInPlay();
 
-	DataLoader();
 	~DataLoader();
 };
 
@@ -339,10 +337,17 @@ private:
 public:
 	// Taken 2 vectors of teams, gamemaster applies those character to his data and sets correct teams.
 	void PrepareTeams(std::vector<Character> t1, std::vector<Character> t2);
+	
+	// Run through all the present characters and refresh their
+	// actions and decrement knockdowntimer (if they have one active).
+	void NextTurn();
+	// Clears team and charactersInPlay vector.
+	void ClearBattleData();
+	
+	void UpdatePlayer(Character* player);
+	void UpdateCharacter(Character character);
 
-	TurnLogic();
 	~TurnLogic();
-
 };
 
 class GameMaster
@@ -350,16 +355,14 @@ class GameMaster
 private:
     static DiceRoller diceRoller;
 	static DataLoader dataLoader;
-	static TurnLogic turnLogic;    
-
-	static std::unique_ptr<GameMaster> instance;
+	static TurnLogic turnLogic;
 
 	GameMaster();
 public:
-	std::unique_ptr<GameMaster> GetInstance();
+	GameMaster& GetInstance();
 
 	// Load all the data in JSON files.
-	bool InitializeGameMaster();
+	int InitializeGameMaster();
 
     // Run through all the present characters and refresh their
     // actions and decrement knockdowntimer (if they have one active).
@@ -380,7 +383,5 @@ public:
     std::vector<Armour> GetArmours();
     std::vector<Weapon> GetWeapons();
     std::vector<Shield> GetShields();
-    std::vector<Character>& GetCharactersInPlay();
-
-    ~GameMaster();
+    std::vector<Character>& GetCharactersInPlay();	
 };
