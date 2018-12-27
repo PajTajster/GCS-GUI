@@ -285,6 +285,23 @@ private:
 	int LoadShields();
 	int LoadNames();
 
+	// Names that will be appended to characters.
+	// [just to skip fighting against Bandit, and Bandit and Bandit]
+	std::vector<std::string> names;
+
+	// Vectors containing all the data app needs.
+
+	// All the characters available to choose.
+	std::vector<Character> allCharacters;
+	// All the skills that characters can learn.
+	std::vector<Skill> allSkills;
+	// All the armours that characters can use.
+	std::vector<Armour> allArmours;
+	// All the weapons that characters can make a mess with.
+	std::vector<Weapon> allWeapons;
+	// All the shields characters can use.
+	std::vector<Shield> allShields;
+
 public:
 
 	int LoadData();
@@ -297,40 +314,38 @@ public:
 	std::vector<Character>& GetCharactersInPlay();
 };
 
+class TurnLogic
+{
+private:
+	// Characters that fight in present match.
+	std::vector<Character> charactersInPlay;
+
+	// Match sides. Set by player before match begin.
+	std::vector<Character> team1;
+	std::vector<Character> team2;
+
+	// Adds given character to adequate team vector (either 1 or 2).
+	void AddCharacterToTeam(int id, int teamToSet);
+	// Adds character into 'charactersInPlay' vector, then add them to team.
+	void AddCharacterToMainVector(Character c, int team);
+
+	// Gives character a random name, result is {name}, the {oldName}.
+	void RandomizeName(Character& c);
+
+public:
+	// Taken 2 vectors of teams, gamemaster applies those character to his data and sets correct teams.
+	void PrepareTeams(std::vector<Character> t1, std::vector<Character> t2);
+
+};
+
 class GameMaster
 {
 private:
     static DiceRoller diceRoller;
 	static DataLoader dataLoader;
-
-    // Names that will be appended to characters.
-    // [just to skip fighting against Bandit, and Bandit and Bandit]
-    std::vector<std::string> names;
-
-    // Vectors containing all the data app needs.
-
-    // All the characters available to choose.
-    std::vector<Character> allCharacters;
-    // All the skills that characters can learn.
-    std::vector<Skill> allSkills;
-    // All the armours that characters can use.
-    std::vector<Armour> allArmours;
-    // All the weapons that characters can make a mess with.
-    std::vector<Weapon> allWeapons;
-    // All the shields characters can use.
-    std::vector<Shield> allShields;
-    // Characters that fight in present match.
-    std::vector<Character> charactersInPlay;
-
-    // Match sides. Set by player before match begin.
-
-    std::vector<Character> team1;
-    std::vector<Character> team2;
-
+	static TurnLogic turnLogic;
     
 public:
-
-
     // Takes a vector of 'charactersInPlay' and sorts it by initiative.
     void CalculateInitiative();
 
@@ -342,13 +357,6 @@ public:
     void ClearBattleData();
     // Taken 2 vectors of teams, gamemaster applies those character to his data and sets correct teams.
     void PrepareTeams(std::vector<Character> t1, std::vector<Character> t2);
-    // Adds given character to adequate team vector (either 1 or 2).
-    void AddCharacterToTeam(int id, int teamToSet);
-    // Adds character into 'charactersInPlay' vector, then add them to team.
-    void AddCharacterToMainVector(Character c, int team);
-
-    // Gives character a random name, result is {name}, the {oldName}.
-    void RandomizeName(Character& c);
 
     // Load all the data in JSON files.
     bool InitializeGameMaster();
