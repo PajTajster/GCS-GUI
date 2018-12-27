@@ -275,10 +275,33 @@ public:
     ~Character();
 };
 
+class DataLoader
+{
+private:
+	int LoadCharacters();
+	int LoadSkills();
+	int LoadArmours();
+	int LoadWeapons();
+	int LoadShields();
+	int LoadNames();
+
+public:
+
+	int LoadData();
+
+	std::vector<Character> GetCharacters();
+	std::vector<Skill> GetSkills();
+	std::vector<Armour> GetArmours();
+	std::vector<Weapon> GetWeapons();
+	std::vector<Shield> GetShields();
+	std::vector<Character>& GetCharactersInPlay();
+};
+
 class GameMaster
 {
 private:
     static DiceRoller diceRoller;
+	static DataLoader dataLoader;
 
     // Names that will be appended to characters.
     // [just to skip fighting against Bandit, and Bandit and Bandit]
@@ -304,12 +327,7 @@ private:
     std::vector<Character> team1;
     std::vector<Character> team2;
 
-    int LoadCharacters();
-    int LoadSkills();
-    int LoadArmours();
-    int LoadWeapons();
-    int LoadShields();
-    int LoadNames();
+    
 public:
 
 
