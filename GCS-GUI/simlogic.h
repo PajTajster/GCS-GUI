@@ -310,6 +310,7 @@ public:
 	std::vector<Armour> GetArmours();
 	std::vector<Weapon> GetWeapons();
 	std::vector<Shield> GetShields();
+	std::vector<std::string> GetNames();
 
 	~DataLoader();
 };
@@ -335,6 +336,8 @@ private:
 	// Takes a vector of 'charactersInPlay' and sorts it by initiative.
 	void CalculateInitiative();
 public:
+	std::vector<std::string> names;
+
 	// Taken 2 vectors of teams, gamemaster applies those character to his data and sets correct teams.
 	void PrepareTeams(std::vector<Character> t1, std::vector<Character> t2);
 	
@@ -346,6 +349,8 @@ public:
 	
 	void UpdatePlayer(Character* player);
 	void UpdateCharacter(Character character);
+
+	std::vector<Character>& GetCharactersInPlay();
 
 	~TurnLogic();
 };
@@ -383,5 +388,6 @@ public:
     std::vector<Armour> GetArmours();
     std::vector<Weapon> GetWeapons();
     std::vector<Shield> GetShields();
-    std::vector<Character>& GetCharactersInPlay();	
+    std::vector<Character>& GetCharactersInPlay();
+	std::vector<std::string> GetNames();
 };

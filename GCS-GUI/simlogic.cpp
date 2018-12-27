@@ -1051,6 +1051,7 @@ std::vector<Skill> DataLoader::GetSkills() { return allSkills; }
 std::vector<Armour> DataLoader::GetArmours() { return allArmours; }
 std::vector<Weapon> DataLoader::GetWeapons() { return allWeapons; }
 std::vector<Shield> DataLoader::GetShields() { return allShields; }
+std::vector<std::string> DataLoader::GetNames() { return names; }
 
 DataLoader::~DataLoader()
 {
@@ -1062,6 +1063,153 @@ DataLoader::~DataLoader()
 	allShields.clear();
 }
 
+void TurnLogic::AddCharacterToTeam(int id, int teamToSet)
+{
+	int IDToFind = id;
+
+	auto characterToPush = std::find_if(charactersInPlay.begin(), charactersInPlay.end(),
+		[IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
+
+	if (teamToSet == 1 || teamToSet == 2)
+	{
+		switch (teamToSet)
+		{
+		case 1:
+			team1.push_back(*characterToPush);
+			break;
+		case 2:
+			team2.push_back(*characterToPush);
+			break;
+		}
+		characterToPush->SetTeam(teamToSet);
+	}
+	return;
+}
+
+void TurnLogic::AddCharacterToMainVector(Character c, int team)
+{
+	int IDToFind = c.ID;
+
+	auto characterToPush = std::find_if(charactersInPlay.cbegin(), charactersInPlay.cend(),
+		[IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
+
+	// Check whether character is placed in such vector, if not, add them.
+	if (characterToPush != charactersInPlay.cend())
+	{
+		return;
+	}
+	else
+	{
+		if (!c.isPlayer)
+		{
+			RandomizeName(c);
+		}
+		charactersInPlay.push_back(c);
+		AddCharacterToTeam(c.ID, team);
+	}
+}
+
+void TurnLogic::RandomizeName(Character& c)
+{
+	std::string oldName = c.name;
+	std::string newName = "";
+
+	// Take a random name from app data.
+	newName = names[rand() % names.size()];
+
+	newName.append(", the " + oldName);
+
+	c.name = newName;
+}
+
+void TurnLogic::CalculateInitiative()
+{
+	std::sort(charactersInPlay.begin(), charactersInPlay.end(),
+		[](const auto& x, const auto& y) -> bool
+	{
+		return x.basicSpeed > y.basicSpeed;
+	});
+}
+
+void TurnLogic::PrepareTeams(std::vector<Character> t1, std::vector<Character> t2)
+{
+	for (auto& it : t1)
+	{
+		AddCharacterToMainVector(it, 1);
+	}
+	for (auto& it : t2)
+	{
+		AddCharacterToMainVector(it, 2);
+	}
+
+	CalculateInitiative();
+}
+
+void TurnLogic::NextTurn()
+{
+	for (auto& i : charactersInPlay)
+	{
+		if (i.isDead)
+			continue;
+		if (i.knockDownTimer)
+		{
+			if (--i.knockDownTimer);
+			else
+				i.isKnockedDown = false;
+		}
+		else
+		{
+			i.hasAttackedThisTurn = false;
+		}
+
+	}
+}
+
+void TurnLogic::ClearBattleData()
+{
+	charactersInPlay.clear();
+	team1.clear();
+	team2.clear();
+}
+
+void TurnLogic::UpdateCharacter(Character character)
+{
+	int IDToFind = character.ID;
+
+	auto characterToFind = std::find_if(charactersInPlay.begin(), charactersInPlay.end(),
+		[IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
+
+	if (characterToFind == charactersInPlay.cend())
+		return;
+
+	*characterToFind = character;
+}
+void TurnLogic::UpdatePlayer(Character* player)
+{
+	int IDToFind = player->ID;
+
+	auto characterToFind = std::find_if(charactersInPlay.cbegin(), charactersInPlay.cend(),
+		[IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
+
+	if (characterToFind == charactersInPlay.cend())
+		return;
+
+	*player = *characterToFind;
+}
+
+std::vector<Character>& TurnLogic::GetCharactersInPlay()
+{
+	return charactersInPlay;
+}
+
+TurnLogic::~TurnLogic()
+{
+	charactersInPlay.clear();
+	team1.clear();
+	team2.clear();
+	names.clear();
+}
+
 GameMaster& GameMaster::GetInstance()
 {
 	static GameMaster instance;
@@ -1069,108 +1217,18 @@ GameMaster& GameMaster::GetInstance()
 	return instance;
 }
 
-void GameMaster::CalculateInitiative()
-{
-    std::sort(charactersInPlay.begin(), charactersInPlay.end(),
-        [](const auto& x, const auto& y) -> bool
-        {
-            return x.basicSpeed > y.basicSpeed;
-        });
-}
-
 void GameMaster::NextTurn()
 {
-    for (auto& i : charactersInPlay)
-    {
-        if (i.isDead)
-            continue;
-        if (i.knockDownTimer)
-        {
-            if (--i.knockDownTimer);
-            else
-                i.isKnockedDown = false;
-        }
-        else
-        {
-            i.hasAttackedThisTurn = false;
-        }
-
-    }
+	turnLogic.NextTurn();
 }
 
 void GameMaster::ClearBattleData()
 {
-    charactersInPlay.clear();
-    team1.clear();
-    team2.clear();
+	turnLogic.ClearBattleData();
 }
 void GameMaster::PrepareTeams(std::vector<Character> t1, std::vector<Character> t2)
 {
-    for (auto& it : t1)
-    {
-        AddCharacterToMainVector(it, 1);
-    }
-    for (auto& it : t2)
-    {
-        AddCharacterToMainVector(it, 2);
-    }
-}
-void GameMaster::AddCharacterToTeam(int id, int teamToSet)
-{
-    int IDToFind = id;
-
-    auto characterToPush = std::find_if(charactersInPlay.begin(), charactersInPlay.end(),
-        [IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
-
-    if (teamToSet == 1 || teamToSet == 2)
-    {
-        switch (teamToSet)
-        {
-        case 1:
-            team1.push_back(*characterToPush);
-            break;
-        case 2:
-            team2.push_back(*characterToPush);
-            break;
-        }
-        characterToPush->SetTeam(teamToSet);
-    }
-    return;
-}
-void GameMaster::AddCharacterToMainVector(Character c, int team)
-{
-    int IDToFind = c.ID;
-
-    auto characterToPush = std::find_if(charactersInPlay.cbegin(), charactersInPlay.cend(),
-        [IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
-
-    // Check whether character is placed in such vector, if not, add them.
-    if ( characterToPush != charactersInPlay.cend())
-    {
-        return;
-    }
-    else
-    {
-        if (!c.isPlayer)
-        {
-            RandomizeName(c);
-        }
-        charactersInPlay.push_back(c);
-        AddCharacterToTeam(c.ID, team);
-    }
-}
-
-void GameMaster::RandomizeName(Character& c)
-{
-    std::string oldName = c.name;
-    std::string newName = "";
-
-    // Take a random name from app data.
-    newName = names[rand() % names.size()];
-
-    newName.append(", the " + oldName);
-
-    c.name = newName;
+	turnLogic.PrepareTeams(t1, t2);
 }
 
 int GameMaster::InitializeGameMaster()
@@ -1180,6 +1238,8 @@ int GameMaster::InitializeGameMaster()
 		return -1;
 	}
 
+	turnLogic.names = GetNames();
+
     return 0;
 }
 
@@ -1187,10 +1247,14 @@ Character* GameMaster::InitBasePlayer()
 {
     Character* player = new Character();
 
+	auto armours = GetArmours();
+	auto weapons = GetWeapons();
+	auto skills = GetSkills();
+
     player->name = "Nobody";
-    player->currentArmour = allArmours[0];
-    player->currentWeapon = allWeapons[0];
-    player->skills = allSkills;
+    player->currentArmour = armours[0];
+    player->currentWeapon = weapons[0];
+    player->skills = skills;
     player->CalculateExtraAttributes();
     player->CalculateSkillsDefaults();
 
@@ -1204,28 +1268,12 @@ Character* GameMaster::InitBasePlayer()
 
 void GameMaster::UpdatePlayer(Character* player)
 {
-    int IDToFind = player->ID;
-
-    auto characterToFind = std::find_if(charactersInPlay.cbegin(), charactersInPlay.cend(),
-        [IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
-
-    if (characterToFind == charactersInPlay.cend())
-        return;
-
-    *player = *characterToFind;
+	turnLogic.UpdatePlayer(player);
 }
 
 void GameMaster::UpdateCharacter(Character character)
 {
-	int IDToFind = character.ID;
-
-	auto characterToFind = std::find_if(charactersInPlay.begin(), charactersInPlay.end(),
-		[IDToFind](const auto &c) -> bool {return c.ID == IDToFind; });
-
-	if (characterToFind == charactersInPlay.cend())
-		return;
-
-	*characterToFind = character;
+	turnLogic.UpdateCharacter(character);
 }
 
 std::vector<Character> GameMaster::GetCharacters()
@@ -1248,6 +1296,7 @@ std::vector<Shield> GameMaster::GetShields()
 {
 	return dataLoader.GetShields();
 }
-std::vector<Character>& GameMaster::GetCharactersInPlay(){ return charactersInPlay; }
+std::vector<Character>& GameMaster::GetCharactersInPlay() { return turnLogic.GetCharactersInPlay(); }
+std::vector<std::string> GameMaster::GetNames() { return dataLoader.GetNames(); }
 
 GameMaster::GameMaster() { }
