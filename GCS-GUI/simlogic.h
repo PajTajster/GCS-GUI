@@ -351,7 +351,13 @@ private:
     static DiceRoller diceRoller;
 	static DataLoader dataLoader;
 	static TurnLogic turnLogic;    
+
+	static std::unique_ptr<GameMaster> instance;
+
+	GameMaster();
 public:
+	std::unique_ptr<GameMaster> GetInstance();
+
 	// Load all the data in JSON files.
 	bool InitializeGameMaster();
 
@@ -376,6 +382,5 @@ public:
     std::vector<Shield> GetShields();
     std::vector<Character>& GetCharactersInPlay();
 
-    GameMaster();
     ~GameMaster();
 };
