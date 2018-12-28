@@ -125,7 +125,7 @@ class AIStrategy
 protected:
 	virtual void NPCSelectTarget(std::vector<Character>& targets) = 0;
 public:
-	virtual void NPCAssessSituation(std::vector<Character>& targets) = 0;
+	virtual std::string NPCAssessSituation(std::vector<Character>& targets) = 0;
 };
 
 class AIStrategyRandom : public AIStrategy
@@ -385,10 +385,10 @@ public:
 class PlayerState
 {
 private:
-	Character* state;
+	Character state;
 public:
-	void SetState(Character* c);
-	Character* GetSate();
+	void SetState(Character c);
+	Character GetSate();
 };
 
 class GameMaster
@@ -397,10 +397,13 @@ private:
     static DiceRoller diceRoller;
 	static DataLoader dataLoader;
 	static TurnLogic turnLogic;
+	static PlayerState playerState;
 
 	GameMaster();
 public:
 	GameMaster& GetInstance();
+	void SavePlayer(Character c);
+	Character LoadPlayer();
 
 	// Load all the data in JSON files.
 	int InitializeGameMaster();

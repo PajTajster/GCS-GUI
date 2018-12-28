@@ -1210,11 +1210,30 @@ TurnLogic::~TurnLogic()
 	names.clear();
 }
 
+void PlayerState::SetState(Character c)
+{
+	state = c;
+}
+Character PlayerState::GetSate()
+{
+	return state;
+}
+
 GameMaster& GameMaster::GetInstance()
 {
 	static GameMaster instance;
 
 	return instance;
+}
+
+void GameMaster::SavePlayer(Character c)
+{
+	playerState.SetState(c);
+}
+
+Character GameMaster::LoadPlayer()
+{
+	return playerState.GetSate();
 }
 
 void GameMaster::NextTurn()
