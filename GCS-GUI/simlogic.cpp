@@ -123,6 +123,80 @@ Weapon::Weapon(std::string n, Damage d, std::string s, bool isM,
     name(n), damage(d), skill(s), isMelee(isM), rateOfFire(rOF), isTwoHanded(isTH) { }
 
 
+int AIStrategyRandom::NPCSelectTarget(std::vector<Character>& targets, Character& NPC)
+{
+	int targetIndex = -1;
+	bool targetFound = false;
+
+	int randTarget = 0;
+	do
+	{
+		randTarget = rand() % targets.size();
+		targetFound = true;
+	} while (targets[randTarget].ID == NPC.ID ||
+		targets[randTarget].GetTeam() == NPC.GetTeam() ||
+		targets[randTarget].isDead);
+
+
+	targetIndex = randTarget;
+
+	return targetIndex;
+}
+int AIStrategyStrongest::NPCSelectTarget(std::vector<Character>& targets, Character& NPC)
+{
+	int targetIndex = -1;
+	bool targetFound = false;
+
+	int max = 0;
+	int i = 0;
+	int selectedTarget = 0;
+	for (auto& it : targets)
+	{
+		if (NPC.GetTeam() == it.GetTeam() || NPC.ID == it.ID || it.isDead)
+		{
+			++i;
+			continue;
+		}
+		if (it.GetHealth() > max)
+		{
+			targetFound = true;
+			selectedTarget = i;
+		}
+		++i;
+	}
+
+	targetIndex = selectedTarget;
+
+
+	return targetIndex;
+}
+int AIStrategyWeakest::NPCSelectTarget(std::vector<Character>& targets, Character& NPC)
+{
+	int targetIndex = -1;
+	bool targetFound = false;
+
+	int min = 999;
+	int i = 0;
+	int selectedTarget = 0;
+	for (auto& it : targets)
+	{
+		if (NPC.GetTeam() == it.GetTeam()|| NPC.ID == it.ID || it.isDead)
+		{
+			++i;
+			continue;
+		}
+		if (it.GetHealth() < min)
+		{
+			targetFound = true;
+			selectedTarget = i;
+		}
+		++i;
+	}
+
+	targetIndex = selectedTarget;
+
+	return targetIndex;
+}
 
 
 std::string Character::Attack(Character& target)

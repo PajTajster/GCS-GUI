@@ -120,32 +120,6 @@ public:
     Weapon(std::string n, Damage d, std::string s, bool isM, int rOF, bool isTH);
 };
 
-class AIStrategy
-{
-protected:
-	virtual void NPCSelectTarget(std::vector<Character>& targets) = 0;
-public:
-	virtual std::string NPCAssessSituation(std::vector<Character>& targets) = 0;
-};
-
-class AIStrategyRandom : public AIStrategy
-{
-	void NPCSelectTarget(std::vector<Character>& targets);
-public:
-	std::string NPCAssessSituation(std::vector<Character>& targets);
-};
-class AIStrategyStrongest : public AIStrategy
-{
-	void NPCSelectTarget(std::vector<Character>& targets);
-public:
-	std::string NPCAssessSituation(std::vector<Character>& targets);
-};
-class AIStrategyWeakest : public AIStrategy
-{
-	void NPCSelectTarget(std::vector<Character>& targets);
-public:
-	std::string NPCAssessSituation(std::vector<Character>& targets);
-};
 
 class Character
 {
@@ -195,7 +169,7 @@ protected:
     int team;
 
     // NPC's currently used AI.
-    AI usedAI;
+    AIStrategy* usedAI;
     // Checks whether NPC has selected it's prey.
     bool doesNPCHaveTarget;
 public:
@@ -300,6 +274,28 @@ public:
     Character(const Character&, bool);
 
     ~Character();
+};
+
+class AIStrategy
+{
+protected:
+	virtual int NPCSelectTarget(std::vector<Character>& targets, Character& NPC) = 0;
+};
+
+class AIStrategyRandom : public AIStrategy
+{
+public:
+	int NPCSelectTarget(std::vector<Character>& targets, Character& NPC);
+};
+class AIStrategyStrongest : public AIStrategy
+{
+public:
+	int NPCSelectTarget(std::vector<Character>& targets, Character& NPC);
+};
+class AIStrategyWeakest : public AIStrategy
+{
+public:
+	int NPCSelectTarget(std::vector<Character>& targets, Character& NPC);
 };
 
 class DataLoader
