@@ -223,11 +223,7 @@ public:
     bool ModifyAttribute(int value, char attribute);
     // Returns Character characterPoints;
     int GetCharacterPoints();
-
-    // Selects the target AI will try to kill depending on the 'usedAI'.
-    // must be supplied all the possible targets.
-    void NPCSelectTarget(std::vector<Character>& charactersToChoose);
-
+	
     // NPC tries to decide it's next move depending on their situation.
     std::string NPCAssessSituation(std::vector<Character>& charactersToChoose);
 
@@ -278,7 +274,9 @@ public:
 
 class AIStrategy
 {
-protected:
+public:
+	// Selects the target AI will try to kill depending on the 'usedAI'.
+	// must be supplied all the possible targets.
 	virtual int NPCSelectTarget(std::vector<Character>& targets, Character& NPC) = 0;
 };
 
