@@ -355,6 +355,15 @@ public:
 	~TurnLogic();
 };
 
+class PlayerState
+{
+private:
+	Character* state;
+public:
+	void SetState(Character* c);
+	Character* GetSate();
+};
+
 class GameMaster
 {
 private:
