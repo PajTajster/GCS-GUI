@@ -120,6 +120,8 @@ public:
     Weapon(std::string n, Damage d, std::string s, bool isM, int rOF, bool isTH);
 };
 
+class AIStrategy;
+
 
 class Character
 {
@@ -388,14 +390,15 @@ public:
 class GameMaster
 {
 private:
-    static DiceRoller diceRoller;
-	static DataLoader dataLoader;
-	static TurnLogic turnLogic;
-	static PlayerState playerState;
+    DiceRoller diceRoller;
+	DataLoader dataLoader;
+	TurnLogic turnLogic;
+	PlayerState playerState;
+
 
 	GameMaster();
 public:
-	GameMaster& GetInstance();
+	static GameMaster& GetInstance();
 	void SavePlayer(Character c);
 	Character LoadPlayer();
 
@@ -423,4 +426,7 @@ public:
     std::vector<Shield> GetShields();
     std::vector<Character>& GetCharactersInPlay();
 	std::vector<std::string> GetNames();
+
+	GameMaster(GameMaster const&) = delete;
+	void operator=(GameMaster const&) = delete;
 };

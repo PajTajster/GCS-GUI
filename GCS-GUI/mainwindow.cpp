@@ -5,7 +5,7 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	gm(new GameMaster),
+	gm(&GameMaster::GetInstance()),
 	isPlayerInit(false),
 	playerST(10),
 	playerDX(10),
@@ -345,7 +345,6 @@ void MainWindow::on_doneButton_2_clicked()
 			ui->comboBox_2->addItem(it.name.c_str());
 		}
 	}
-	gm->CalculateInitiative();
 
 	ui->attackTargetButton->setEnabled(false);
 	ui->surrenderButton->setEnabled(false);
