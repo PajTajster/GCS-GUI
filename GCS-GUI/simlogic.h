@@ -120,6 +120,33 @@ public:
     Weapon(std::string n, Damage d, std::string s, bool isM, int rOF, bool isTH);
 };
 
+class AIStrategy
+{
+protected:
+	virtual void NPCSelectTarget(std::vector<Character>& targets) = 0;
+public:
+	virtual void NPCAssessSituation(std::vector<Character>& targets) = 0;
+};
+
+class AIStrategyRandom : public AIStrategy
+{
+	void NPCSelectTarget(std::vector<Character>& targets);
+public:
+	std::string NPCAssessSituation(std::vector<Character>& targets);
+};
+class AIStrategyStrongest : public AIStrategy
+{
+	void NPCSelectTarget(std::vector<Character>& targets);
+public:
+	std::string NPCAssessSituation(std::vector<Character>& targets);
+};
+class AIStrategyWeakest : public AIStrategy
+{
+	void NPCSelectTarget(std::vector<Character>& targets);
+public:
+	std::string NPCAssessSituation(std::vector<Character>& targets);
+};
+
 class Character
 {
 protected:
