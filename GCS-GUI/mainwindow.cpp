@@ -122,6 +122,8 @@ void MainWindow::on_pCCharacterDoneButton_clicked()
 	player->CalculateExtraAttributes();
 	player->CalculateSkillsDefaults();
 
+	gm->SavePlayer(*player);
+
 	ui->stackedWidget->setCurrentIndex(0);
 }
 void MainWindow::on_pCCancelButton_clicked()
@@ -693,7 +695,7 @@ void MainWindow::ReInit()
 	team1Size = 1;
 	team2Size = 0;
 
-	player = gm->InitBasePlayer();
+	*player = gm->LoadPlayer();
 	isPlayerInit = false;
 	playerST = 10;
 	playerDX = 10;
