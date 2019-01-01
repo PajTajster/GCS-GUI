@@ -5,7 +5,7 @@
 MainWindow::MainWindow(QWidget *parent) :
 	QMainWindow(parent),
 	ui(new Ui::MainWindow),
-	gm(&GameMaster::GetInstance()),
+	gm(GameMaster::GetInstance()),
 	isPlayerInit(false),
 	playerST(10),
 	playerDX(10),
@@ -19,21 +19,21 @@ MainWindow::MainWindow(QWidget *parent) :
 	isGameFinished(0),
 	isPlayerAlive(true)
 {
-    ui->setupUi(this);
-    ui->stackedWidget->setCurrentIndex(0);
+	ui->setupUi(this);
+	ui->stackedWidget->setCurrentIndex(0);
 
 	baddiesID[0] = -1;
 	baddiesID[1] = -1;
 	baddiesDead[0] = false;
 	baddiesDead[1] = false;
 
-    if(!gm->InitializeGameMaster())
-    {
+	if (!gm.InitializeGameMaster())
+	{
 		this->close();
-    }
-	player = gm->InitBasePlayer();
+	}
+	player = gm.InitBasePlayer();
 
-	allCharacters = gm->GetCharacters();
+	allCharacters = gm.GetCharacters();
 	currentCharacterSelected = allCharacters[0];
 
 	if (!isPlayerInit)
@@ -49,9 +49,9 @@ MainWindow::MainWindow(QWidget *parent) :
 		ui->prepareBattleButton->adjustSize();
 	}
 
-	std::vector<Weapon> weapons = gm->GetWeapons();
-	std::vector<Armour> armours = gm->GetArmours();
-	std::vector<Shield> shields = gm->GetShields();
+	std::vector<Weapon> weapons = gm.GetWeapons();
+	std::vector<Armour> armours = gm.GetArmours();
+	std::vector<Shield> shields = gm.GetShields();
 	for (auto& it : weapons)
 	{
 		ui->weaponComboBox->addItem(it.name.c_str());
@@ -68,7 +68,7 @@ MainWindow::MainWindow(QWidget *parent) :
 	{
 		ui->comboBox->addItem(it.name.c_str());
 	}
-	
+
 	if (currentTeam == 1)
 	{
 		currentTeam = 1;
@@ -85,9 +85,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    delete ui;
-    delete gm;
-    delete player;
+	delete ui;
+	delete player;
 }
 
 void MainWindow::on_exitButton_clicked()
@@ -96,7 +95,7 @@ void MainWindow::on_exitButton_clicked()
 }
 void MainWindow::on_prepareCharacterButton_clicked()
 {
-    ui->stackedWidget->setCurrentIndex(1);
+	ui->stackedWidget->setCurrentIndex(1);
 }
 void MainWindow::on_prepareBattleButton_clicked()
 {
@@ -122,8 +121,6 @@ void MainWindow::on_pCCharacterDoneButton_clicked()
 	player->CalculateExtraAttributes();
 	player->CalculateSkillsDefaults();
 
-	gm->SavePlayer(*player);
-
 	ui->stackedWidget->setCurrentIndex(0);
 }
 void MainWindow::on_pCCancelButton_clicked()
@@ -138,8 +135,8 @@ void MainWindow::on_pCCancelButton_clicked()
 	ui->VetSpinBox->setValue(0);
 
 	delete player;
-	player = gm->InitBasePlayer();
-    ui->stackedWidget->setCurrentIndex(0);
+	player = gm.InitBasePlayer();
+	ui->stackedWidget->setCurrentIndex(0);
 }
 
 void MainWindow::on_characterNameTextEdit_textChanged()
@@ -231,7 +228,7 @@ void MainWindow::on_VetSpinBox_valueChanged(int i)
 void MainWindow::on_weaponComboBox_currentIndexChanged(const QString &text)
 {
 	std::string nameToSearch = text.toLocal8Bit().constData();
-	std::vector<Weapon> items = gm->GetWeapons();
+	std::vector<Weapon> items = gm.GetWeapons();
 	auto searchedItem = std::find_if(items.cbegin(), items.cend(),
 		[nameToSearch](const Weapon& s) -> bool {return s.name == nameToSearch; });
 
@@ -255,7 +252,7 @@ void MainWindow::on_weaponComboBox_currentIndexChanged(const QString &text)
 void MainWindow::on_armourComboBox_currentIndexChanged(const QString &text)
 {
 	std::string nameToSearch = text.toLocal8Bit().constData();
-	std::vector<Armour> items = gm->GetArmours();
+	std::vector<Armour> items = gm.GetArmours();
 	auto searchedItem = std::find_if(items.cbegin(), items.cend(),
 		[nameToSearch](const Armour& s) -> bool {return s.name == nameToSearch; });
 
@@ -264,7 +261,7 @@ void MainWindow::on_armourComboBox_currentIndexChanged(const QString &text)
 void MainWindow::on_shieldComboBox_currentIndexChanged(const QString &text)
 {
 	std::string nameToSearch = text.toLocal8Bit().constData();
-	std::vector<Shield> items = gm->GetShields();
+	std::vector<Shield> items = gm.GetShields();
 	auto searchedItem = std::find_if(items.cbegin(), items.cend(),
 		[nameToSearch](const Shield& s) -> bool {return s.name == nameToSearch; });
 
@@ -316,9 +313,9 @@ void MainWindow::on_doneButton_2_clicked()
 	}
 
 	team1Chars.push_back(*player);
-	gm->PrepareTeams(team1Chars, team2Chars);
+	gm.PrepareTeams(team1Chars, team2Chars);
 
-	std::vector<Character> charactersInPlay = gm->GetCharactersInPlay();
+	std::vector<Character> charactersInPlay = gm.GetCharactersInPlay();
 
 	int i = 0;
 	ui->charactersPresentText->appendPlainText("Team 1:\n");
@@ -479,7 +476,7 @@ void MainWindow::updatedInfoLabel()
 
 void MainWindow::playTurn(int characterIndex)
 {
-	std::vector<Character> characters = gm->GetCharactersInPlay();
+	std::vector<Character> characters = gm.GetCharactersInPlay();
 
 	checkForDead();
 	if (isGameFinished)
@@ -492,7 +489,7 @@ void MainWindow::playTurn(int characterIndex)
 		++currentTurn;
 		currentCharacterTurn = 0;
 		characterIndex = 0;
-		gm->NextTurn();
+		gm.NextTurn();
 
 		ui->battleLogText->append("Turn " + QString::number(currentTurn + 1));
 	}
@@ -534,9 +531,9 @@ void MainWindow::playTurn(int characterIndex)
 	else
 	{
 		messageToLog = QString::fromStdString(currentCharacter.NPCAssessSituation(characters));
-		gm->UpdateCharacter(currentCharacter);
-		gm->UpdateCharacter(characters[currentCharacter.currentTargetIndex]);
-		gm->UpdatePlayer(player);
+		gm.UpdateCharacter(currentCharacter);
+		gm.UpdateCharacter(characters[currentCharacter.currentTargetIndex]);
+		gm.UpdatePlayer(player);
 		if (player->isDead)
 			isPlayerAlive = false;
 
@@ -607,8 +604,8 @@ void MainWindow::on_attackTargetButton_clicked()
 
 		ui->battleLogText->append(messageToLog + "\n");
 
-		gm->UpdateCharacter(currentCharacterSelected);
-		gm->UpdatePlayer(player);
+		gm.UpdateCharacter(currentCharacterSelected);
+		gm.UpdatePlayer(player);
 
 		ui->skipTurnButton->setEnabled(false);
 		ui->surrenderButton->setEnabled(false);
@@ -624,7 +621,7 @@ void MainWindow::on_comboBox_2_currentIndexChanged(int index)
 		return;
 
 	int IDToFind = baddiesID[index];
-	std::vector<Character> allcharacters = gm->GetCharactersInPlay();
+	std::vector<Character> allcharacters = gm.GetCharactersInPlay();
 
 
 	auto searchedCharacter = std::find_if(allcharacters.cbegin(), allcharacters.cend(),
@@ -638,7 +635,7 @@ void MainWindow::on_comboBox_2_currentIndexChanged(int index)
 
 void MainWindow::checkForDead()
 {
-	std::vector<Character> characters = gm->GetCharactersInPlay();
+	std::vector<Character> characters = gm.GetCharactersInPlay();
 
 	for (auto& it : characters)
 	{
@@ -695,7 +692,7 @@ void MainWindow::ReInit()
 	team1Size = 1;
 	team2Size = 0;
 
-	*player = gm->LoadPlayer();
+	player = gm.InitBasePlayer();
 	isPlayerInit = false;
 	playerST = 10;
 	playerDX = 10;
@@ -736,5 +733,5 @@ void MainWindow::ReInit()
 		currentTeam = 2;
 		ui->errorLabel->setText("Team current size: " +
 			QString::number(team2Chars.size()));
-	}	
+	}
 }

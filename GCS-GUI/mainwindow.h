@@ -5,17 +5,17 @@
 #include "simlogic.h"
 
 namespace Ui {
-class MainWindow;
+	class MainWindow;
 }
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
+	Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = nullptr);
+	explicit MainWindow(QWidget *parent = nullptr);
 
-    ~MainWindow();
+	~MainWindow();
 
 private slots:
 	// MAIN MENU
@@ -25,7 +25,7 @@ private slots:
 
 	// PLAYER CREATION MENU
 	void on_pCCharacterDoneButton_clicked();
-    void on_pCCancelButton_clicked();
+	void on_pCCancelButton_clicked();
 	void on_characterNameTextEdit_textChanged();
 	void on_STSpinBox_valueChanged(int i);
 	void on_DXSpinBox_valueChanged(int i);
@@ -56,9 +56,9 @@ private slots:
 	void on_comboBox_2_currentIndexChanged(int index);
 
 private:
-    Ui::MainWindow *ui;
-    GameMaster *gm;
-    Character *player;
+	Ui::MainWindow *ui;
+	GameMaster& gm;
+	Character *player;
 
 
 	// Player related stuff
@@ -80,7 +80,7 @@ private:
 	int team2Size;
 	int currentTeam; // 1 or 2
 
-	// Battle Menu vars
+					 // Battle Menu vars
 	bool isGameFinished;
 	int currentTurn;
 	int currentCharacterTurn;
