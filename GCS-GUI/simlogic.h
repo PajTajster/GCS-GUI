@@ -120,6 +120,8 @@ public:
 	Weapon(std::string n, Damage d, std::string s, bool isM, int rOF, bool isTH);
 };
 
+class AIStrategy;
+
 class Character
 {
 protected:
@@ -168,9 +170,7 @@ protected:
 	int team;
 
 	// NPC's currently used AI.
-	AI usedAI;
-	// Checks whether NPC has selected it's prey.
-	bool doesNPCHaveTarget;
+	AIStrategy* usedAI;
 public:
 	// Character's ID for distinguishability.
 	int ID;
@@ -222,11 +222,7 @@ public:
 	bool ModifyAttribute(int value, char attribute);
 	// Returns Character characterPoints;
 	int GetCharacterPoints();
-
-	// Selects the target AI will try to kill depending on the 'usedAI'.
-	// must be supplied all the possible targets.
-	void NPCSelectTarget(std::vector<Character>& charactersToChoose);
-
+	
 	// NPC tries to decide it's next move depending on their situation.
 	std::string NPCAssessSituation(std::vector<Character>& charactersToChoose);
 
@@ -265,15 +261,33 @@ public:
 
 	std::vector<std::string> PrintCharacter();
 
-
-	//Character& operator=(const Character& original);
-
+	
 	Character();
 	Character(const Character&);
 	Character(const Character&, bool);
 
 	~Character();
 };
+
+class AIStrategy
+{
+public:
+	virtual void NPCSelectTarget(std::vector<Character> targets, Character* NPC) = 0;
+};
+
+class AIRandom : public AIStrategy
+{
+	void NPCSelectTarget(std::vector<Character> targets, Character* NPC);
+};
+class AIStrongest : public AIStrategy
+{
+	void NPCSelectTarget(std::vector<Character> targets, Character* NPC);
+};
+class AIWeakest : public AIStrategy
+{
+	void NPCSelectTarget(std::vector<Character> targets, Character* NPC);
+};
+
 
 class DataLoader
 {

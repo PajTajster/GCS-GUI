@@ -407,7 +407,7 @@ void Character::CalculateExtraAttributes()
 {
 	// Player has his own intelligence, no need for extra ones.
 	if (isPlayer)
-		usedAI = AI_NULL;
+		usedAI = nullptr;
 
 	// If no shield, then block is 0
 	// if there's one, then it's half of "Shield" skill proficiency.
@@ -622,99 +622,6 @@ bool Character::ModifyAttribute(int value, char attribute)
 
 int Character::GetCharacterPoints() { return characterPoints; }
 
-void Character::NPCSelectTarget(std::vector<Character>& charactersToChoose)
-{
-	// If NPC is dead or knocked down, he does nothing.
-	if (isDead || isKnockedDown)
-		return;
-
-	if (doesNPCHaveTarget)
-	{
-		if (!charactersToChoose[currentTargetIndex].isDead)
-			return;
-	}
-	bool foundTarget = false;
-
-	switch (usedAI)
-	{
-		// NPC chooses opponent with most health.
-	case AI_TARGET_STRONGEST:
-	{
-		int max = 0;
-		int i = 0;
-		int selectedTarget = 0;
-		for (auto& it : charactersToChoose)
-		{
-			if (this->team == it.team || this->ID == it.ID || it.isDead)
-			{
-				++i;
-				continue;
-			}
-			if (it.GetHealth() > max)
-			{
-				foundTarget = true;
-				selectedTarget = i;
-			}
-			++i;
-		}
-
-		currentTargetIndex = selectedTarget;
-		break;
-	}
-	// NPC chooses opponent with least health.
-	case AI_TARGET_WEAKEST:
-	{
-		int min = 999;
-		int i = 0;
-		int selectedTarget = 0;
-		for (auto& it : charactersToChoose)
-		{
-			if (this->team == it.team || this->ID == it.ID || it.isDead)
-			{
-				++i;
-				continue;
-			}
-			if (it.GetHealth() < min)
-			{
-				foundTarget = true;
-				selectedTarget = i;
-			}
-			++i;
-		}
-
-		currentTargetIndex = selectedTarget;
-		break;
-	}
-	// NPC chooses random opponent.
-	case AI_TARGET_RANDOM:
-	{
-		int randTarget = 0;
-
-		do
-		{
-			randTarget = rand() % charactersToChoose.size();
-			foundTarget = true;
-		} while (charactersToChoose[randTarget].ID == this->ID ||
-			charactersToChoose[randTarget].team == this->team ||
-			charactersToChoose[randTarget].isDead);
-
-
-		currentTargetIndex = randTarget;
-	}
-
-	break;
-	default:
-		return;
-	}
-
-	if (!foundTarget)
-		currentTargetIndex = -1;
-	else
-	{
-		doesNPCHaveTarget = true;
-	}
-}
-
 std::string Character::NPCAssessSituation(std::vector<Character>& charactersToChoose)
 {
 	std::string message = "";
@@ -722,14 +629,14 @@ std::string Character::NPCAssessSituation(std::vector<Character>& charactersToCh
 
 	if (currentTargetIndex == -1)
 	{
-		NPCSelectTarget(charactersToChoose);
+		usedAI->NPCSelectTarget(charactersToChoose, this);
 	}
 	if (currentTargetIndex != -1)
 	{
 
 		if (charactersToChoose[currentTargetIndex].isDead)
 		{
-			NPCSelectTarget(charactersToChoose);
+			usedAI->NPCSelectTarget(charactersToChoose, this);
 			if (currentTargetIndex == -1)
 				return message;
 		}
@@ -790,10 +697,23 @@ Character::Character(const Character& original, bool deep)
 	}
 }
 Character::Character() : isWieldingShield(false), isDead(false), isPlayer(false),
-isKnockedDown(false), hasAttackedThisTurn(false), ID(++nextID), doesNPCHaveTarget(false),
-knockDownTimer(0), strength(10), dexterity(10), health(10), veterancy(0), currentTargetIndex(-1)
+isKnockedDown(false), hasAttackedThisTurn(false), ID(++nextID), currentTargetIndex(-1),
+knockDownTimer(0), strength(10), dexterity(10), health(10), veterancy(0)
 {
-	usedAI = static_cast<AI>(rand() % AI_NULL);
+	switch (rand() % 3)
+	{
+	case 0:
+		usedAI = new AIRandom;
+		break;
+	case 1:
+		usedAI = new AIStrongest;
+		break;
+	case 2:
+		usedAI = new AIWeakest;
+		break;
+	default:
+		break;
+	}
 
 	skills =
 	{
@@ -804,6 +724,109 @@ knockDownTimer(0), strength(10), dexterity(10), health(10), veterancy(0), curren
 Character::~Character()
 {
 	skills.clear();
+}
+
+void AIRandom::NPCSelectTarget(std::vector<Character> targets, Character* NPC)
+{
+	// If NPC is dead or knocked down, he does nothing.
+	if (NPC->isDead || NPC->isKnockedDown)
+		return;
+
+	if (NPC->currentTargetIndex != -1)
+	{
+		if (!targets[NPC->currentTargetIndex].isDead)
+			return;
+	}
+	bool foundTarget = false;
+
+	int randTarget = 0;
+
+	do
+	{
+		randTarget = rand() % targets.size();
+		foundTarget = true;
+	} while (targets[randTarget].ID == NPC->ID ||
+		targets[randTarget].GetTeam() == NPC->GetTeam() ||
+		targets[randTarget].isDead);
+	
+
+	NPC->currentTargetIndex = randTarget;
+
+	if (!foundTarget)
+		NPC->currentTargetIndex = -1;
+}
+void AIWeakest::NPCSelectTarget(std::vector<Character> targets, Character* NPC)
+{
+	// If NPC is dead or knocked down, he does nothing.
+	if (NPC->isDead || NPC->isKnockedDown)
+		return;
+
+	if (NPC->currentTargetIndex != -1)
+	{
+		if (!targets[NPC->currentTargetIndex].isDead)
+			return;
+	}
+	bool foundTarget = false;
+
+	int min = 999;
+	int i = 0;
+	int selectedTarget = 0;
+	for (auto& it : targets)
+	{
+		if (NPC->GetTeam() == it.GetTeam() || NPC->ID == it.ID || it.isDead)
+		{
+			++i;
+			continue;
+		}
+		if (it.GetHealth() < min)
+		{
+			foundTarget = true;
+			selectedTarget = i;
+		}
+		++i;
+	}
+
+	NPC->currentTargetIndex = selectedTarget;
+
+	if (!foundTarget)
+		NPC->currentTargetIndex = -1;
+}
+void AIStrongest::NPCSelectTarget(std::vector<Character> targets, Character* NPC)
+{
+	// If NPC is dead or knocked down, he does nothing.
+	if (NPC->isDead || NPC->isKnockedDown)
+		return;
+
+	if (NPC->currentTargetIndex != -1)
+	{
+		if (!targets[NPC->currentTargetIndex].isDead)
+			return;
+	}
+	bool foundTarget = false;
+
+	// NPC chooses opponent with most health.
+	int max = 0;
+	int i = 0;
+	int selectedTarget = 0;
+	for (auto& it : targets)
+	{
+		if (NPC->GetTeam() == it.GetTeam() || NPC->ID == it.ID || it.isDead)
+		{
+			++i;
+			continue;
+		}
+		if (it.GetHealth() > max)
+		{
+			foundTarget = true;
+			selectedTarget = i;
+		}
+		++i;
+	}
+
+	NPC->currentTargetIndex = selectedTarget;
+
+	if (!foundTarget)
+		NPC->currentTargetIndex = -1;
 }
 
 
