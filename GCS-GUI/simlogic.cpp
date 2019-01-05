@@ -1294,7 +1294,7 @@ std::vector<Shield> GameMaster::GetShields()
 {
 	return dataLoader.GetShields();
 }
-std::vector<Character>& GameMaster::GetCharactersInPlay() { return charactersInPlay; }
+std::vector<Character>& GameMaster::GetCharactersInPlay() { return turnLogic.GetCharactersInPlay(); }
 std::vector<std::string> GameMaster::GetNames() { return dataLoader.GetNames(); }
 
 GameMaster& GameMaster::GetInstance()

@@ -361,6 +361,8 @@ void MainWindow::on_doneButton_2_clicked()
 		}
 	}
 
+	gm.SavePlayer(*player);
+
 	ui->stackedWidget->setCurrentIndex(4);
 	playTurn(0);
 }
@@ -681,30 +683,21 @@ void MainWindow::checkForDead()
 
 void MainWindow::ReInit()
 {
-	ui->STSpinBox->setValue(10);
-	ui->DXSpinBox->setValue(10);
-	ui->HTSpinBox->setValue(10);
-	ui->VetSpinBox->setValue(0);
-	ui->pCCharacterPointsLabel->setText("100");
-
 	team1Chars.clear();
 	team2Chars.clear();
 	team1Size = 1;
 	team2Size = 0;
 
-	player = gm.InitBasePlayer();
-	isPlayerInit = false;
-	playerST = 10;
-	playerDX = 10;
-	playerHT = 10;
-	playerVet = 0;
-	isPlayerOutOfPoints = false;
+	*player = gm.LoadPlayer();
 	teamSize = 0;
 	currentTeam = 1;
 	currentTurn = 0;
 	currentCharacterTurn = 0;
 	isGameFinished = false;
+	allEnemiesDead = false;
 	isPlayerAlive = true;
+	isPlayerAlive = true;
+
 	baddiesID[0] = -1;
 	baddiesID[1] = -1;
 	baddiesDead[0] = false;
