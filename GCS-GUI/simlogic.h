@@ -5,19 +5,6 @@
 #include <string>
 #include <memory>
 
-// Decision NPCs take during combat
-enum AI
-{
-	// NPC will focus strongest enemies in fight.
-	AI_TARGET_STRONGEST,
-	// NPC will treat weakest opponent as primary target.
-	AI_TARGET_WEAKEST,
-	// NPC will randomly choose his target.
-	AI_TARGET_RANDOM,
-	// Nonexistant AI.
-	AI_NULL
-};
-
 // GURPS system uses dices to apply damage, so it uses
 // 'dices' amount of 6-sided dices + 'bonus'.
 typedef struct
